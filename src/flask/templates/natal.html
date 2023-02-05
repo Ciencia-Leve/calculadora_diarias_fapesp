@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Calculadora de Diárias para FAPESP
+{% endblock %}
+
+{% block main %}
+
+
+<div class="container">
+
+  Cálculo considerando chegada pelo menos 1 dia antes do evento e volta pelo menos 1 dia depois.
+
+  <p>Preencha os dados abaixo e o recibo no formato FAPESP será gerado automaticamente.</p>
+  <p>Não salvamos nenhum dado para além do processo de geração do recibo. </p>
+  {% if name %}
+  Recibo de diárias para {{name}}:
+  <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo preenchido</a>
+
+  {% endif %}
+  {{download_url|safe}}
+  <form method="POST">
+
+    {% for entry in form %}
+    <div>
+      {{ form.csrf_token }}
+      {{ entry.label }} {{ entry(size=20) }}
+    </div>
+    {% endfor %}
+
+    <input type="submit" value="Go">
+  </form>
+
+
+</div>
+{% endblock %}

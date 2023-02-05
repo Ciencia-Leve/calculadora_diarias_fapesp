@@ -1,0 +1,13 @@
+{
+    "Diárias Nacionais em bolsas": {
+        "Com pernoite": "R$ 255,00",
+        "Diária para refeições": "R$ 45,00",
+        "Sem pernoite": "R$ 170,00"
+    },
+    "Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ": {
+        "Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)": "R$ 555,00",
+        "Com pernoite (para as demais localidades)": "R$ 380,00",
+        "Diária para refeições": "R$ 75,00",
+        "Sem pernoite": "R$ 285,00"
+    }
+}

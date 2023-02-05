@@ -1,0 +1,584 @@
+{
+    "Albânia": {
+        "Demais localidades": "98,00",
+        "Escodra": "138,00",
+        "Tirana": "189,00",
+        "Vlore": "120,00"
+    },
+    "Alemanha": {
+        "Berlim": "400,00",
+        "Bonn": "350,00",
+        "Demais localidades": "334,00",
+        "Hamburgo": "389,00",
+        "Munique": "380,00"
+    },
+    "Angola": {
+        "Demais localidades": "153,00",
+        "Luanda": "288,00"
+    },
+    "Argentina": {
+        "Bariloche": "278,00",
+        "Buenos Aires": "286,00",
+        "Comodoro Rivadavia": "189,00",
+        "Córdoba": "164,00",
+        "Demais localidades": "123,00",
+        "Mendoza": "219,00",
+        "Salta": "195,00"
+    },
+    "Armênia": {
+        "Demais localidades": "159,00",
+        "Yerevan": "198,00"
+    },
+    "Arábia Saudita": {
+        "Al-Khobar": "400,00",
+        "Demais localidades": "354,00",
+        "Jeddah": "400,00",
+        "Riyadh": "400,00"
+    },
+    "Austrália": {
+        "Canberra, Melbourne e Sydney": "400,00",
+        "Demais localidades": "281,00"
+    },
+    "Bahamas": {
+        "Bahamas": "400,00"
+    },
+    "Barein": {
+        "Barein": "350,00"
+    },
+    "Bolívia": {
+        "Cochabamba": "138,00",
+        "Demais localidades": "109,00",
+        "La Paz": "206,00"
+    },
+    "Botswana": {
+        "Demais localidades": "179,00",
+        "Francistown": "228,00",
+        "Gaborone": "263,00",
+        "Ghanzi": "245,00",
+        "Jwareng": "249,00",
+        "Kasane": "274,00",
+        "Mahalapye": "226,00",
+        "Maun": "249,00",
+        "Nata": "203,00",
+        "Palapye": "225,00",
+        "Selebi-Phikwe": "205,00",
+        "Shakawe": "315,00",
+        "Tsabong": "249,00"
+    },
+    "Bulgária": {
+        "Burgas": "130,00",
+        "Demais localidades": "98,00",
+        "Plovdiv": "130,00",
+        "Stara Zagora": "130,00",
+        "Sófia": "270,00",
+        "Varna": "130,00"
+    },
+    "Bélgica": {
+        "Bélgica": "400,00"
+    },
+    "Bósnia e Herzegovina": {
+        "Banja Luka": "138,00",
+        "Demais localidades": "113,00",
+        "Sarajevo": "155,00"
+    },
+    "Cabo Verde": {
+        "Demais localidades": "169,00",
+        "Mindelo": "220,00",
+        "Praia": "235,00"
+    },
+    "Canadá": {
+        "Calgary": "336,00",
+        "Demais localidades": "309,00",
+        "Halifax": "340,00",
+        "Montreal": "400,00",
+        "Ottawa": "400,00",
+        "Toronto": "400,00",
+        "Vancouver": "400,00"
+    },
+    "Chile ": {
+        "Demais localidades": "275,00",
+        "Santiago": "400,00"
+    },
+    "China ": {
+        "Beijing": "288,00",
+        "Cantão": "275,00",
+        "Chengdu": "273,00",
+        "Dalian": "249,00",
+        "Demais localidades": "179,00",
+        "Haikou": "306,00",
+        "Hangzhou": "269,00",
+        "Hong-Kong": "400,00",
+        "Kunming": "286,00",
+        "Nanjing": "204,00",
+        "Shenzhen": "275,00",
+        "Suzhou": "230,00",
+        "Tianjin": "233,00",
+        "Xangai": "299,00",
+        "Xi'An": "254,00"
+    },
+    "Chipre": {
+        "Demais localidades": "213,00",
+        "Lárnaca, Limassol, Pafos": "311,00",
+        "Nicósia": "233,00"
+    },
+    "Cingapura": {
+        "Cingapura": "400,00"
+    },
+    "Colômbia ": {
+        "Barranquilla": "135,00",
+        "Bogotá": "206,00",
+        "Bucaramanga": "141,00",
+        "Cali": "175,00",
+        "Cartagena": "213,00",
+        "Demais localidades": "123,00",
+        "Medellín": "179,00",
+        "Santa Marta": "153,00"
+    },
+    "Coréia do Sul": {
+        "Demais localidades": "204,00",
+        "Seul": "400,00"
+    },
+    "Costa Rica ": {
+        "Demais localidades": "211,00",
+        "San Jose": "265,00"
+    },
+    "Costa do Marfim": {
+        "Abidjão": "268,00",
+        "Assinie": "290,00",
+        "Demais localidades": "144,00",
+        "Grand Bassam": "174,00",
+        "San Pedro": "203,00",
+        "Yamoussokro": "240,00"
+    },
+    "Croácia": {
+        "Demais localidades": "225,00",
+        "Dubrovnik": "386,00",
+        "Opatija": "364,00",
+        "Split": "400,00",
+        "Zadar": "391,00",
+        "Zagreb": "275,00"
+    },
+    "Cuba": {
+        "Demais localidades": "153,00",
+        "Havana": "320,00",
+        "Santiago de Cuba": "160,00"
+    },
+    "Curaçao": {
+        "Todas as localidades": "400,00"
+    },
+    "Dinamarca": {
+        "Dinamarca": "400,00"
+    },
+    "Egito": {
+        "Alexandria": "285,00",
+        "Cairo": "348,00",
+        "Demais localidades": "203,00"
+    },
+    "El Salvador": {
+        "Demais localidades": "165,00",
+        "San Salvador": "274,00"
+    },
+    "Emirados Árabes Unidos": {
+        "Abu Dhabi": "400,00",
+        "Demais localidades": "400,00",
+        "Dubai": "400,00"
+    },
+    "Equador": {
+        "Cuenca": "215,00",
+        "Demais localidades": "165,00",
+        "Guayaquil": "305,00",
+        "Quito": "221,00",
+        "Santo Domingo": "224,00"
+    },
+    "Espanha": {
+        "Barcelona": "335,00",
+        "Demais localidades": "265,00",
+        "Madri": "388,00"
+    },
+    "Estados Unidos": {
+        "Boston": "400,00",
+        "Chicago": "400,00",
+        "Demais localidades": "379,00",
+        "Filadélfia": "400,00",
+        "Honolulu": "400,00",
+        "Los Angeles": "400,00",
+        "Miami": "400,00",
+        "Nova York": "400,00",
+        "São Francisco": "400,00",
+        "Washington DC.": "400,00"
+    },
+    "Estônia ": {
+        "Demais localidades": "331,00",
+        "Tallinn": "384,00"
+    },
+    "Etiópia": {
+        "Adis Abeba": "248,00",
+        "Demais localidades": "104,00"
+    },
+    "Filipinas": {
+        "Demais localidades": "129,00",
+        "Manila": "313,00"
+    },
+    "Finlândia": {
+        "Demais localidades": "335,00",
+        "Helsinki": "400,00"
+    },
+    "França": {
+        "Demais localidades": "400,00",
+        "Paris": "400,00"
+    },
+    "Gana": {
+        "Accra": "400,00",
+        "Demais localidades": "325,00"
+    },
+    "Grécia": {
+        "Atenas": "370,00",
+        "Demais localidades": "195,00",
+        "Thessaloníki": "205,00"
+    },
+    "Guatemala": {
+        "Cidade de Guatemala": "246,00",
+        "Demais localidades": "121,00"
+    },
+    "Guiné-Bissau": {
+        "Bafata": "138,00",
+        "Bissau": "209,00",
+        "Demais localidades": "94,00",
+        "Quinhamel": "150,00"
+    },
+    "Haiti": {
+        "Cabo Haitiano e Jacmel": "130,00",
+        "Demais localidades": "130,00",
+        "Jeremie e Les Cayes": "130,00",
+        "Porto Principe": "270,00",
+        "Porto-da-Paz": "130,00"
+    },
+    "Holanda": {
+        "Holanda": "400,00"
+    },
+    "Honduras": {
+        "Copán": "196,00",
+        "Demais localidades": "128,00",
+        "La Ceiba": "195,00",
+        "Roatan": "284,00",
+        "San Pedro Sula": "236,00",
+        "Tegucigalpa": "258,00"
+    },
+    "Hungria": {
+        "Budapeste": "346,00",
+        "Demais localidades": "179,00"
+    },
+    "Ilhas Maurício": {
+        "Demais localidades": "186,00",
+        "Porto Luis": "304,00"
+    },
+    "Indonésia ": {
+        "Demais localidades": "128,00",
+        "Yogyakarta": "151,00"
+    },
+    "Irlanda": {
+        "Irlanda": "385,00"
+    },
+    "Irã": {
+        "Demais localidades": "170,00",
+        "Teerã": "308,00"
+    },
+    "Islândia": {
+        "Islândia": "400,00"
+    },
+    "Israel": {
+        "Demais localidades": "330,00",
+        "Haifa": "395,00",
+        "Jerusalém": "353,00",
+        "Tel Aviv": "400,00"
+    },
+    "Itália": {
+        "Bolonha": "344,00",
+        "Demais localidades": "213,00",
+        "Florença": "331,00",
+        "Milão": "396,00",
+        "Nápoles": "376,00",
+        "Palermo": "393,00",
+        "Roma": "400,00",
+        "Trieste": "324,00",
+        "Turim": "343,00",
+        "Veneza": "400,00"
+    },
+    "Jamaica": {
+        "Demais localidades": "400,00",
+        "Kingston": "390,00"
+    },
+    "Japão": {
+        "Demais localidades": "256,00",
+        "Fukuoka": "319,00",
+        "Kobe": "279,00",
+        "Nagoya": "324,00",
+        "Osaka": "320,00",
+        "Quioto": "356,00",
+        "Tóquio": "396,00",
+        "Yokohama": "363,00"
+    },
+    "Jordânia": {
+        "Amã": "316,00",
+        "Demais localidades": "103,00",
+        "Jerusalém": "353,00"
+    },
+    "Letônia": {
+        "Demais localidades": "183,00",
+        "Riga": "258,00"
+    },
+    "Lituânia": {
+        "Demais localidades": "191,00",
+        "Vilnius": "285,00"
+    },
+    "Luxemburgo": {
+        "Luxemburgo": "400,00"
+    },
+    "Líbano": {
+        "Al Metn": "373,00",
+        "Beirute": "308,00",
+        "Demais localidades": "184,00"
+    },
+    "Madagascar": {
+        "Antananarivo": "229,00",
+        "Demais localidades": "81,00"
+    },
+    "Malta": {
+        "Malta": "400,00"
+    },
+    "Malásia": {
+        "Demais localidades": "181,00",
+        "Kuala Lumpur": "271,00"
+    },
+    "Marrocos": {
+        "Casablanca": "305,00",
+        "Demais localidades": "194,00",
+        "Fez": "203,00",
+        "Marraquexe": "230,00",
+        "Rabat": "279,00"
+    },
+    "Montenegro": {
+        "Demais localidades": "121,00",
+        "Podgorica": "196,00"
+    },
+    "Moçambique": {
+        "Demais localidades": "208,00",
+        "Maputo": "363,00"
+    },
+    "México": {
+        "Cancún": "243,00",
+        "Cidade do México": "400,00",
+        "Demais localidades": "150,00"
+    },
+    "Mônaco": {
+        "Mônaco": "400,00"
+    },
+    "Namíbia": {
+        "Demais localidades": "113,00",
+        "Windhoek": "239,00"
+    },
+    "Nepal": {
+        "Demais localidades": "54,00",
+        "Kathmandu": "223,00"
+    },
+    "Nicarágua": {
+        "Demais localidades": "130,00",
+        "Manágua": "243,00"
+    },
+    "Nigéria": {
+        "Abuja": "145,00",
+        "Demais localidades": "84,00",
+        "Ibadan": "93,00",
+        "Kano": "103,00",
+        "Lagos": "176,00"
+    },
+    "Noruega": {
+        "Noruega": "365,00"
+    },
+    "Nova Zelândia": {
+        "Auckland e Wellington": "369,00",
+        "Demais localidades": "335,00"
+    },
+    "Omã": {
+        "Demais localidades": "315,00",
+        "Mascate": "348,00"
+    },
+    "Panamá": {
+        "Cidade do Panamá": "329,00",
+        "Demais localidades": "233,00"
+    },
+    "Paraguai": {
+        "Assunção": "263,00",
+        "Ciudad del Este": "263,00",
+        "Demais localidades": "179,00"
+    },
+    "Peru ": {
+        "Arequipa": "214,00",
+        "Cuzco": "245,00",
+        "Demais localidades": "158,00",
+        "Lima": "300,00"
+    },
+    "Polônia ": {
+        "Demais localidades": "250,00",
+        "Varsóvia": "359,00"
+    },
+    "Porto Rico": {
+        "Porto Rico": "380,00"
+    },
+    "Portugal": {
+        "Demais localidades": "191,00",
+        "Lisboa": "400,00",
+        "Porto": "400,00"
+    },
+    "Qatar": {
+        "Qatar": "400,00"
+    },
+    "Quênia": {
+        "Demais localidades": "119,00",
+        "Mombasa": "211,00",
+        "Nairobi": "353,00"
+    },
+    "Reino Unido": {
+        "Demais localidades": "400,00",
+        "Londres": "400,00"
+    },
+    "Republica da Eslovênia": {
+        "Republica da Eslovênia": "341,00"
+    },
+    "Republica da Geórgia": {
+        "Demais localidades": "178,00",
+        "Tbilisi": "226,00"
+    },
+    "República Dominicana": {
+        "Bavaro/Punta Cana": "384,00",
+        "Boca Chica – formalmente East Santo Domingo": "160,00",
+        "Demais localidades": "79,00",
+        "Santo Domingo": "316,00"
+    },
+    "República Eslovaca": {
+        "Bratislava": "305,00",
+        "Demais localidades": "216,00"
+    },
+    "República Tcheca": {
+        "Brno": "211,00",
+        "Demais localidades": "148,00",
+        "Praga": "344,00"
+    },
+    "Romênia": {
+        "Bucareste": "300,00",
+        "Demais localidades": "178,00"
+    },
+    "Ruanda": {
+        "Bugesera": "155,00",
+        "Demais localidades": "104,00",
+        "Karongi": "213,00",
+        "Kigali": "231,00",
+        "Musanze": "181,00",
+        "Rubavu": "200,00"
+    },
+    "Rússia": {
+        "Demais localidades": "165,00",
+        "Moscou": "400,00",
+        "São Cristóvão e Névis": "400,00",
+        "São Petersburgo": "400,00"
+    },
+    "Senegal": {
+        "Dakar": "339,00",
+        "Demais localidades": "156,00"
+    },
+    "Sri Lanka": {
+        "Colombo": "268,00",
+        "Demais localidades": "154,00"
+    },
+    "Suriname": {
+        "Demais localidades": "123,00",
+        "Paramaribo": "215,00"
+    },
+    "Suécia": {
+        "Demais localidades": "400,00",
+        "Estocolmo": "400,00"
+    },
+    "Suíça": {
+        "Suíça": "400,00"
+    },
+    "Sérvia": {
+        "Belgrado": "225,00",
+        "Demais localidades": "126,00"
+    },
+    "Síria": {
+        "Damasco": "270,00",
+        "Demais localidades": "160,00"
+    },
+    "Tailândia": {
+        "Bangkok": "269,00",
+        "Chiang Mai": "216,00",
+        "Demais localidades": "98,00",
+        "Pattaya": "194,00",
+        "Phuket": "288,00"
+    },
+    "Tanzânia": {
+        "Arusha": "235,00",
+        "Dar es Salaam": "279,00",
+        "Demais localidades": "119,00"
+    },
+    "Timor-Leste ": {
+        "Demais localidades": "83,00",
+        "Díli": "200,00"
+    },
+    "Tunísia": {
+        "Demais localidades": "113,00",
+        "Tunis": "174,00"
+    },
+    "Turquia": {
+        "Ancara": "214,00",
+        "Antalya": "231,00",
+        "Demais localidades": "155,00",
+        "Esmirna": "239,00",
+        "Istambul": "294,00"
+    },
+    "Ucrânia": {
+        "Demais localidades": "85,00",
+        "Kiev": "256,00"
+    },
+    "Uganda": {
+        "Demais localidades": "79,00",
+        "Kampala": "270,00"
+    },
+    "Uruguai": {
+        "Colonia": "309,00",
+        "Demais localidades": "211,00",
+        "Montevideo": "270,00",
+        "Punta Del Este": "241,00"
+    },
+    "Venezuela": {
+        "Caracas": "183,00",
+        "Demais localidades": "59,00",
+        "Maracaibo": "113,00",
+        "Mérida": "84,00"
+    },
+    "Vietnã": {
+        "Demais localidades": "86,00",
+        "Hanói": "210,00",
+        "Ho Chi Minh City": "199,00"
+    },
+    "África do Sul": {
+        "Cidade do Cabo": "290,00",
+        "Demais localidades": "144,00",
+        "Durban": "279,00",
+        "Joanesburgo": "384,00",
+        "Sun City": "273,00"
+    },
+    "Áustria": {
+        "Áustria": "359,00"
+    },
+    "Índia": {
+        "Bangalore": "253,00",
+        "Calcutá": "380,00",
+        "Chennai": "235,00",
+        "Demais localidades": "219,00",
+        "Goa": "239,00",
+        "Hyderabad": "228,00",
+        "Mumbai": "335,00",
+        "Nova Deli": "300,00"
+    }
+}
