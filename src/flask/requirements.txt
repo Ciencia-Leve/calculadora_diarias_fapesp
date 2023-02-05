@@ -5,7 +5,7 @@ flask
 tqdm
 gunicorn
 num2words
-money 
+py-money 
 pathlib
 python-docx
 python-docx-replace
