@@ -1,17 +1,12 @@
 """ A flask app to connect iNaturalist to Wikidata."""
 
-from dataclasses import dataclass
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
-from taxon2wikipedia.render_page import get_pt_wikipage_from_qid
-from wdcuration import get_statement_values, lookup_id
 from wtforms import BooleanField, IntegerField, StringField
 from wtforms.validators import InputRequired, Optional
 
 import flask
 from flask import Flask, redirect, render_template, request, send_from_directory
-from inat2wiki.get_user_observations import get_observations_with_wiki_info
-from inat2wiki.parse_observation import get_commons_url, request_observation_data
 
 from fapesp_calculator.calculate_national import *
 import os

@@ -1,0 +1,11 @@
+bootstrap-flask
+flask_wtf
+wtforms
+flask
+tqdm
+gunicorn
+num2words
+money 
+pathlib
+python-docx
+python-docx-docx_replace
