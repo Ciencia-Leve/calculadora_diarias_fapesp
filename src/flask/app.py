@@ -52,7 +52,7 @@ class dailyStipendForm(FlaskForm):
 def projectlist_base():
     form = dailyStipendForm()
     if form.validate_on_submit():
-
+        my_dict = {}
         my_dict["nome_completo"] = form.name.data
         my_dict["n_do_processo"] = form.n_do_processo.data
         my_dict["cpf"] = form.cpf.data

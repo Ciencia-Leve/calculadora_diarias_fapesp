@@ -34,7 +34,6 @@ from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
 from num2words import num2words
-from fapesp_calculator.dados import my_dict
 import locale
 
 HERE = Path(__file__).parent.resolve()
@@ -43,10 +42,6 @@ RESULTS = HERE.joinpath("results").resolve()
 import json
 
 locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
-
-
-def main():
-    generate_template_for_natal(my_dict=my_dict)
 
 
 def generate_template_for_natal(
@@ -163,7 +158,3 @@ def number_to_long_number(number_p):
         result = text1 + text2
 
     return result
-
-
-if __name__ == "__main__":
-    main()
