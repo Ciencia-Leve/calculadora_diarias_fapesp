@@ -36,12 +36,13 @@ from python_docx_replace import docx_replace
 from num2words import num2words
 import locale
 
+# from fapesp_calculator.dados import my_dict
 HERE = Path(__file__).parent.resolve()
 DATA = HERE.parent.joinpath("data").resolve()
 RESULTS = HERE.joinpath("results").resolve()
 import json
 
-locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
 def generate_template_for_natal(
