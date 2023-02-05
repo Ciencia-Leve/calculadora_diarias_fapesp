@@ -4,6 +4,7 @@ wtforms
 flask
 tqdm
 gunicorn
+locale
 num2words
 py-money 
 pathlib
