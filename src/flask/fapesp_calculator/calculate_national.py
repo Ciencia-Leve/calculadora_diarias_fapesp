@@ -33,20 +33,21 @@ from datetime import datetime
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from num2words import num2words
+from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
 import locale
 
-# from fapesp_calculator.dados import my_dict
+# from dados import my_dict
+
 HERE = Path(__file__).parent.resolve()
 DATA = HERE.parent.joinpath("data").resolve()
 RESULTS = HERE.joinpath("results").resolve()
 import json
 
-locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
-
 
 def generate_template_for_natal(
     my_dict,
+    category="Diárias Nacionais em bolsas",
+    subcategory="Com pernoite",
     template_path=HERE.joinpath("modelo_6_template.docx"),
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
 ):
@@ -57,15 +58,16 @@ def generate_template_for_natal(
 
     national_dict_computable = {}
 
-    for category, category_data in national_dict.items():
-        national_dict_computable[category] = dict()
+    for category_in_dict, category_data in national_dict.items():
+        national_dict_computable[category_in_dict] = dict()
 
-        for subcategory, value in category_data.items():
+        for subcategory_in_dict, value in category_data.items():
             value = value.replace("R$ ", "")
-            national_dict_computable[category][subcategory] = Money(
+            national_dict_computable[category_in_dict][subcategory_in_dict] = Money(
                 value.replace(",", "."), Currency.BRL
             )
-
+    print(category)
+    print(subcategory)
     arrival_date_time = datetime.fromisoformat("2023-04-23T00:15:00")
     departure_date_time = datetime.fromisoformat("2023-04-28T00:19:00")
 
@@ -77,10 +79,8 @@ def generate_template_for_natal(
     arrival_advance = event_start_date_time.day - arrival_date_time.day
     departure_gap = departure_date_time.day - event_end_date_time.day
 
-    category = "Diárias Nacionais em bolsas"
-    subcategory = "Com pernoite"
-
     value_for_category = national_dict_computable[category][subcategory]
+
     if (event_duration.seconds) > 0:
         print(f"Considerando que o evento terá {event_duration.days+1} dias;")
         print(f"E que você chegará {arrival_advance} dia(s) antes do evento;")
@@ -101,61 +101,24 @@ def generate_template_for_natal(
 
         doc = Document(template_path)
 
-        value_in_brl = str(value_for_category * total_daily_stipends).replace(
-            "BRL ", ""
-        )
+        value_in_brl = value_for_category * total_daily_stipends
 
-        value_in_brl = value_in_brl.replace(".", ",")
-        my_dict["valor_em_reais"] = value_in_brl
-        my_dict["valor_por_extenso"] = number_to_long_number(value_in_brl)
-        my_dict["data_inicial"] = event_start_date_time.strftime("%d de %B de %Y")
-        my_dict["data_final"] = event_end_date_time.strftime("%d de %B de %Y")
+        my_dict["valor_em_reais"] = str(value_in_brl.amount).replace(".", ",")
+        my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
+        my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
+        my_dict["data_final"] = data_por_extenso(event_end_date_time)
         my_dict[
             "adendo"
         ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
 
         my_dict["nome_do_evento"] = "Natal Bioinformatics Forum"
         my_dict["local_do_evento"] = "Natal (RN)"
-        my_dict["data_de_hoje"] = datetime.now().strftime("%d de %B de %Y")
+        my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
 
         docx_replace(doc, **my_dict)
 
         doc.save(filled_template_path)
 
 
-def number_to_long_number(number_p):
-    if number_p.find(",") != -1:
-        number_p = number_p.split(",")
-        number_p1 = int(number_p[0].replace(".", ""))
-        number_p2 = int(number_p[1])
-    else:
-        number_p1 = int(number_p.replace(".", ""))
-        number_p2 = 0
-
-    if number_p1 == 1:
-        aux1 = " real"
-    else:
-        aux1 = " reais"
-
-    if number_p2 == 1:
-        aux2 = " centavo"
-    else:
-        aux2 = " centavos"
-
-    text1 = ""
-    if number_p1 > 0:
-        text1 = num2words(number_p1, lang="pt") + str(aux1)
-    else:
-        text1 = ""
-
-    if number_p2 > 0:
-        text2 = num2words(number_p2, lang="pt") + str(aux2)
-    else:
-        text2 = ""
-
-    if number_p1 > 0 and number_p2 > 0:
-        result = text1 + " e " + text2
-    else:
-        result = text1 + text2
-
-    return result
+if __name__ == "__main__":
+    generate_template_for_natal(my_dict)

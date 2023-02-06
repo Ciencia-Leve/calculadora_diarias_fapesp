@@ -2,7 +2,7 @@
 
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, IntegerField, StringField
+from wtforms import BooleanField, IntegerField, StringField, RadioField
 from wtforms.validators import InputRequired, Optional
 
 import flask
@@ -38,6 +38,14 @@ def index():
 
 
 class dailyStipendForm(FlaskForm):
+    level = RadioField(
+        "Posição",
+        choices=[
+            ("base", "IC, mestrado ou doutorado"),
+            ("plus", "Pós-Doc e além"),
+        ],
+    )
+
     name = StringField("Nome completo", validators=[InputRequired()])
     n_do_processo = StringField("Número do Processo", validators=[InputRequired()])
     cpf = StringField("CPF", validators=[InputRequired()])
@@ -60,11 +68,18 @@ def projectlist_base():
         my_dict["endereço"] = form.endereço.data
         my_dict["bairro"] = form.bairro.data
         my_dict["cidade"] = form.cidade.data
-
-        generate_template_for_natal(
-            my_dict=my_dict,
-            filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
-        )
+        if form.level.data == "base":
+            generate_template_for_natal(
+                my_dict=my_dict,
+                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+            )
+        if form.level.data == "plus":
+            generate_template_for_natal(
+                my_dict=my_dict,
+                category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
+                subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
+                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+            )
 
         return render_template("natal.html", form=form, name=form.name.data)
 
