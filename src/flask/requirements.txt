@@ -9,4 +9,3 @@ py-money
 pathlib
 python-docx
 python-docx-replace
-math
