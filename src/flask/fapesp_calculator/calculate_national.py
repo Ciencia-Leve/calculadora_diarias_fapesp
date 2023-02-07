@@ -66,8 +66,6 @@ def generate_template_for_natal(
             national_dict_computable[category_in_dict][subcategory_in_dict] = Money(
                 value.replace(",", "."), Currency.BRL
             )
-    print(category)
-    print(subcategory)
     arrival_date_time = datetime.fromisoformat("2023-04-23T00:15:00")
     departure_date_time = datetime.fromisoformat("2023-04-28T00:19:00")
 
@@ -82,23 +80,22 @@ def generate_template_for_natal(
     value_for_category = national_dict_computable[category][subcategory]
 
     if (event_duration.seconds) > 0:
-        print(f"Considerando que o evento terá {event_duration.days+1} dias;")
-        print(f"E que você chegará {arrival_advance} dia(s) antes do evento;")
-        print(f"E que sairá {departure_gap} dia(s) depois do evento;")
-
-        print(f"Você tem direito a {event_duration.days+1} diárias do evento")
+        message_to_send = f"""
+        Considerando que o evento terá {event_duration.days+1} dias;
+        E que você chegará {arrival_advance} dia(s) antes do evento;
+        E que sairá {departure_gap} dia(s) depois do evento;
+        Você tem direito a {event_duration.days+1} diárias do evento em si
+        """
         total_daily_stipends = event_duration.days + 1
         if arrival_advance > 0 and departure_gap > 0:
-            print(
-                f"E mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
-            )
+            message_to_send += f"E mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
             total_daily_stipends += 1
 
-        print(
-            f"O valor que você pode solicitar para a localidade escolhida é de {value_for_category*total_daily_stipends},"
-            f" correspondendo a {total_daily_stipends} x {str(value_for_category)}."
-        )
-
+        message_to_send += f"""
+            O valor que você pode solicitar para a localidade escolhida é de {value_for_category*total_daily_stipends},
+            correspondendo a {total_daily_stipends} x {str(value_for_category)}."
+        """
+        print(message_to_send)
         doc = Document(template_path)
 
         value_in_brl = value_for_category * total_daily_stipends
