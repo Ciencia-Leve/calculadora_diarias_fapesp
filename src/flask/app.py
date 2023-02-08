@@ -1,14 +1,16 @@
 """ A flask app to connect iNaturalist to Wikidata."""
 
+from email.policy import default
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, IntegerField, StringField, RadioField
+from wtforms import BooleanField, IntegerField, StringField, RadioField, DateField
 from wtforms.validators import InputRequired, Optional
 
 import flask
 from flask import Flask, redirect, render_template, request, send_from_directory
-
+from datetime import datetime, date
 from fapesp_calculator.calculate_national import *
+from fapesp_calculator.por_extenso import data_por_extenso
 import os
 from pathlib import Path
 
@@ -38,6 +40,20 @@ def index():
 
 
 class dailyStipendForm(FlaskForm):
+
+    event_start_date = DateField(
+        "Data de Início do Evento",
+        format="%Y-%m-%d",
+        default=date(2023, 3, 29),
+        validators=[InputRequired()],
+    )
+    event_end_date = DateField(
+        "Data de Término do Evento",
+        format="%Y-%m-%d",
+        default=date(2023, 3, 31),
+        validators=[InputRequired()],
+    )
+
     level = RadioField(
         "Posição",
         choices=[
@@ -46,13 +62,24 @@ class dailyStipendForm(FlaskForm):
         ],
     )
 
-    name = StringField("Nome completo", validators=[InputRequired()])
-    n_do_processo = StringField("Número do Processo", validators=[InputRequired()])
-    cpf = StringField("CPF", validators=[InputRequired()])
-    identidade = StringField("Identidade", validators=[InputRequired()])
-    endereço = StringField("Endereço (rua e número)", validators=[InputRequired()])
-    bairro = StringField("Bairro", validators=[InputRequired()])
-    cidade = StringField("Cidade", validators=[InputRequired()])
+
+class dailyStipendFormWithPersonalInfo(dailyStipendForm):
+
+    name = StringField(
+        "Nome completo", default="NOME COMPLETO", validators=[Optional()]
+    )
+    n_do_processo = StringField(
+        "Número do Processo", default="NÚMERO DO PROCESSO", validators=[Optional()]
+    )
+    cpf = StringField("CPF", default="CPF", validators=[Optional()])
+    identidade = StringField(
+        "Identidade", default="IDENTIDADE", validators=[Optional()]
+    )
+    endereço = StringField(
+        "Endereço (rua e número)", default="ENDEREÇO", validators=[Optional()]
+    )
+    bairro = StringField("Bairro", default="BAIRRO", validators=[Optional()])
+    cidade = StringField("Cidade", default="CIDADE", validators=[Optional()])
 
 
 @app.route("/natal/", methods=["GET", "POST"])
@@ -61,29 +88,32 @@ def projectlist_base():
     form = dailyStipendForm()
     if form.validate_on_submit():
         my_dict = {}
-        my_dict["nome_completo"] = form.name.data
-        my_dict["n_do_processo"] = form.n_do_processo.data
-        my_dict["cpf"] = form.cpf.data
-        my_dict["identidade"] = form.identidade.data
-        my_dict["endereço"] = form.endereço.data
-        my_dict["bairro"] = form.bairro.data
-        my_dict["cidade"] = form.cidade.data
+        print(form.event_end_date.data)
         if form.level.data == "base":
-            generate_template_for_natal(
+            message_to_send = generate_template_for_natal(
                 my_dict=my_dict,
+                event_start_date_time=form.event_start_date.data,
+                event_end_date_time=form.event_end_date.data,
                 filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
             )
         if form.level.data == "plus":
-            generate_template_for_natal(
+            message_to_send = generate_template_for_natal(
                 my_dict=my_dict,
+                event_start_date_time=form.event_start_date.data,
+                event_end_date_time=form.event_end_date.data,
                 category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
                 subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
                 filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
             )
 
-        return render_template("natal.html", form=form, name=form.name.data)
+        return render_template(
+            "natal.html",
+            submitted=True,
+            form=form,
+            message_to_send=message_to_send,
+        )
 
-    return render_template("natal.html", form=form)
+    return render_template("natal.html", submitted=False, form=form)
 
 
 @app.route("/about")

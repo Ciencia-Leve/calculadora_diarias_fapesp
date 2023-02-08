@@ -13,12 +13,19 @@ Calculadora de Diárias para FAPESP
 
   <p>Preencha os dados abaixo e o recibo no formato FAPESP será gerado automaticamente.</p>
   <p>Não salvamos nenhum dado para além do processo de geração do recibo. </p>
-  {% if name %}
-  Recibo de diárias para {{name}}:
-  <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo preenchido</a>
+  {% if submitted %}
 
+  <h2> Resultado:</h2>
+  {{message_to_send | safe}}
+
+  <p> Recibo de diárias semi-preenchido:
+
+
+    <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo preenchido (faltando assinatura)</a>
+  </p>
   {% endif %}
   {{download_url|safe}}
+  <h2>Formulário</h2>
   <form method="POST">
 
     {% for entry in form %}
@@ -28,7 +35,7 @@ Calculadora de Diárias para FAPESP
     </div>
     {% endfor %}
 
-    <input type="submit" value="Go">
+    <input type="submit" value="Calcular">
   </form>
 
 

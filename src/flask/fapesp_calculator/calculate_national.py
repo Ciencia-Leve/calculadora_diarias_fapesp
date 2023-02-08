@@ -46,6 +46,9 @@ import json
 
 def generate_template_for_natal(
     my_dict,
+    event_start_date_time,
+    event_end_date_time,
+    arrival_before_and_after=True,
     category="Diárias Nacionais em bolsas",
     subcategory="Com pernoite",
     template_path=HERE.joinpath("modelo_6_template.docx"),
@@ -66,56 +69,50 @@ def generate_template_for_natal(
             national_dict_computable[category_in_dict][subcategory_in_dict] = Money(
                 value.replace(",", "."), Currency.BRL
             )
-    arrival_date_time = datetime.fromisoformat("2023-04-23T00:15:00")
-    departure_date_time = datetime.fromisoformat("2023-04-28T00:19:00")
-
-    event_start_date_time = datetime.fromisoformat("2023-04-24T00:08:00")
-    event_end_date_time = datetime.fromisoformat("2023-04-26T00:16:00")
-
     event_duration = event_end_date_time - event_start_date_time
-
-    arrival_advance = event_start_date_time.day - arrival_date_time.day
-    departure_gap = departure_date_time.day - event_end_date_time.day
 
     value_for_category = national_dict_computable[category][subcategory]
 
-    if (event_duration.seconds) > 0:
-        message_to_send = f"""
-        Considerando que o evento terá {event_duration.days+1} dias;
-        E que você chegará {arrival_advance} dia(s) antes do evento;
-        E que sairá {departure_gap} dia(s) depois do evento;
-        Você tem direito a {event_duration.days+1} diárias do evento em si
-        """
-        total_daily_stipends = event_duration.days + 1
-        if arrival_advance > 0 and departure_gap > 0:
-            message_to_send += f"E mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
-            total_daily_stipends += 1
+    message_to_send = f"""
+    Você tem direito a {event_duration.days+1} diárias do evento em si
+    """
+    total_daily_stipends = event_duration.days + 1
+    if arrival_before_and_after:
+        message_to_send += f"e mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
+        total_daily_stipends += 1
 
-        message_to_send += f"""
-            O valor que você pode solicitar para a localidade escolhida é de {value_for_category*total_daily_stipends},
-            correspondendo a {total_daily_stipends} x {str(value_for_category)}."
-        """
-        print(message_to_send)
-        doc = Document(template_path)
+    message_to_send += f"""
+        <p> O valor que você pode solicitar para a localidade escolhida é de {value_for_category*total_daily_stipends},
+        correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
+    """
+    doc = Document(template_path)
 
-        value_in_brl = value_for_category * total_daily_stipends
+    value_in_brl = value_for_category * total_daily_stipends
 
-        my_dict["valor_em_reais"] = str(value_in_brl.amount).replace(".", ",")
-        my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
-        my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
-        my_dict["data_final"] = data_por_extenso(event_end_date_time)
-        my_dict[
-            "adendo"
-        ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
+    my_dict["valor_em_reais"] = str(value_in_brl.amount).replace(".", ",")
+    my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
+    my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
+    my_dict["data_final"] = data_por_extenso(event_end_date_time)
+    my_dict[
+        "adendo"
+    ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
 
-        my_dict["nome_do_evento"] = "Natal Bioinformatics Forum"
-        my_dict["local_do_evento"] = "Natal (RN)"
-        my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
+    my_dict["nome_do_evento"] = "Natal Bioinformatics Forum"
+    my_dict["local_do_evento"] = "Natal (RN)"
+    my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
 
-        docx_replace(doc, **my_dict)
+    docx_replace(doc, **my_dict)
 
-        doc.save(filled_template_path)
+    doc.save(filled_template_path)
+
+    return message_to_send
 
 
 if __name__ == "__main__":
-    generate_template_for_natal(my_dict)
+    generate_template_for_natal(
+        my_dict=my_dict,
+        event_start_date_time=datetime(2023, 3, 29),
+        event_end_date_time=datetime(2023, 3, 31),
+        category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
+        subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
+    )
