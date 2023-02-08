@@ -95,11 +95,11 @@
         "Toronto": "400,00",
         "Vancouver": "400,00"
     },
-    "Chile ": {
+    "Chile": {
         "Demais localidades": "275,00",
         "Santiago": "400,00"
     },
-    "China ": {
+    "China": {
         "Beijing": "288,00",
         "Cantão": "275,00",
         "Chengdu": "273,00",
@@ -124,7 +124,7 @@
     "Cingapura": {
         "Cingapura": "400,00"
     },
-    "Colômbia ": {
+    "Colômbia": {
         "Barranquilla": "135,00",
         "Bogotá": "206,00",
         "Bucaramanga": "141,00",
@@ -138,7 +138,7 @@
         "Demais localidades": "204,00",
         "Seul": "400,00"
     },
-    "Costa Rica ": {
+    "Costa Rica": {
         "Demais localidades": "211,00",
         "San Jose": "265,00"
     },
@@ -207,7 +207,7 @@
         "São Francisco": "400,00",
         "Washington DC.": "400,00"
     },
-    "Estônia ": {
+    "Estônia": {
         "Demais localidades": "331,00",
         "Tallinn": "384,00"
     },
@@ -272,7 +272,7 @@
         "Demais localidades": "186,00",
         "Porto Luis": "304,00"
     },
-    "Indonésia ": {
+    "Indonésia": {
         "Demais localidades": "128,00",
         "Yogyakarta": "151,00"
     },
@@ -412,13 +412,13 @@
         "Ciudad del Este": "263,00",
         "Demais localidades": "179,00"
     },
-    "Peru ": {
+    "Peru": {
         "Arequipa": "214,00",
         "Cuzco": "245,00",
         "Demais localidades": "158,00",
         "Lima": "300,00"
     },
-    "Polônia ": {
+    "Polônia": {
         "Demais localidades": "250,00",
         "Varsóvia": "359,00"
     },
@@ -521,7 +521,7 @@
         "Dar es Salaam": "279,00",
         "Demais localidades": "119,00"
     },
-    "Timor-Leste ": {
+    "Timor-Leste": {
         "Demais localidades": "83,00",
         "Díli": "200,00"
     },
@@ -560,6 +560,15 @@
         "Demais localidades": "86,00",
         "Hanói": "210,00",
         "Ho Chi Minh City": "199,00"
+    },
+    "Zâmbia": {
+        "Chingola": "233,00",
+        "Chipata": "171,00",
+        "Demais localidades": "160,00",
+        "Kitwe": "274,00",
+        "Lusaka": "308,00",
+        "Ndola": "361,00",
+        "Solwezi": "229,00"
     },
     "África do Sul": {
         "Cidade do Cabo": "290,00",

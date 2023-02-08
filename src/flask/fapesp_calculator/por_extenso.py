@@ -81,10 +81,7 @@ def ate_milhares_por_extenso(n):
     if centenas > 100 and dezenas != 0:
         return centenas_por_extenso(milhares) + " mil " + centenas_por_extenso(centenas)
 
-    if centenas > 100:
-        return (
-            centenas_por_extenso(milhares) + " mil e " + centenas_por_extenso(centenas)
-        )
+    return centenas_por_extenso(milhares) + " mil e " + centenas_por_extenso(centenas)
 
 
 def main():

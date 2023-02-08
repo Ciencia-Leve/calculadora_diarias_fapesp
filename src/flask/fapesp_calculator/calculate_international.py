@@ -34,6 +34,7 @@ from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
 from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+import requests
 
 # from dados import my_dict
 
@@ -52,13 +53,12 @@ def generate_template_for_international_event(
     event_name_string="NOME DO EVENTO",
     event_place_string="LOCAL DO EVENTO",
     extra_day=True,
-    usd_to_brl_rate=5.2,
     template_path=HERE.joinpath("modelo_6_template_internacional.docx"),
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
 ):
-
+    print("HERE")
     international_values_dict = json.loads(
-        RESULTS.joinpath("fapesp_international_values.json").read_text()
+        RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
     )
 
     international_values_dict_computable = {}
@@ -87,6 +87,13 @@ def generate_template_for_international_event(
 
     value_in_usd = value_for_category * total_daily_stipends
 
+    today_formatted = datetime.now().strftime("%m-%d-%Y")
+    conversion_url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{today_formatted}'&$top=100&$format=json&$select=cotacaoCompra,dataHoraCotacao"
+
+    r = requests.get(conversion_url)
+    data = r.json()
+
+    usd_to_brl_rate = float(data["value"][0]["cotacaoCompra"])
     brl_calculation = float(value_in_usd.amount) * usd_to_brl_rate
 
     print(brl_calculation)
@@ -95,7 +102,7 @@ def generate_template_for_international_event(
     message_to_send += f"""
         <p> O valor que você pode solicitar para a localidade escolhida é de {value_in_usd},
         correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
-        <p> Considerando uma taxa de conversão de {str(usd_to_brl_rate)}, o valor em reais solicitado será de {value_in_brl}
+        <p> Considerando uma taxa de conversão de {str(usd_to_brl_rate)} (<a target="_blank" href="{conversion_url}">Plataforma Olinda - Banco Central do Brasil</a>) o valor em reais solicitado será de {value_in_brl}
     """
     doc = Document(template_path)
 
@@ -105,6 +112,7 @@ def generate_template_for_international_event(
     my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
     my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
     my_dict["data_final"] = data_por_extenso(event_end_date_time)
+    my_dict["taxa_usd"] = str(usd_to_brl_rate)
 
     if extra_day:
         my_dict[
@@ -125,7 +133,9 @@ def generate_template_for_international_event(
 
 if __name__ == "__main__":
     generate_template_for_international_event(
-        my_dict=my_dict,
+        my_dict={},
+        country="Alemanha",
+        subnational_location="Hamburgo",
         event_start_date_time=datetime(2023, 3, 29),
         event_end_date_time=datetime(2023, 3, 31),
     )

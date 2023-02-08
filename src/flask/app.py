@@ -11,7 +11,7 @@ from wtforms import (
     DateField,
     SelectField,
 )
-from wtforms.validators import InputRequired, Optional
+from wtforms.validators import InputRequired, Optional, DataRequired
 
 import flask
 from flask import (
@@ -24,9 +24,12 @@ from flask import (
 )
 from datetime import datetime, date
 from fapesp_calculator.calculate_international import *
+from fapesp_calculator.calculate_national import *
+
 from fapesp_calculator.por_extenso import data_por_extenso
 import os
 from pathlib import Path
+import requests
 
 APP = Path(__file__).parent.resolve()
 
@@ -98,9 +101,10 @@ class dailyStipendInternationalForm(dailyStipendForm):
         "Country",
         choices=[(a, a) for a in list(international_values_dict_computable.keys())],
         default="Albânia",
+        validators=[Optional()],
     )
 
-    location = SelectField("Category", choices=[])
+    location = SelectField("Location", choices=[], validators=[Optional()])
 
 
 class dailyStipendNationalForm(dailyStipendForm):
@@ -140,7 +144,10 @@ def internacional():
     form.location.choices = [
         (a, a) for a in list(international_values_dict_computable["Albânia"].keys())
     ]
-    if form.validate_on_submit():
+
+    if request.method == "POST":
+
+        print("RUNNING CODE")
         my_dict = {}
         if form.plus_day.data == "sim":
             extra_day = True
@@ -152,6 +159,8 @@ def internacional():
             event_start_date_time=form.event_start_date.data,
             event_end_date_time=form.event_end_date.data,
             extra_day=extra_day,
+            country=form.country.data,
+            subnational_location=form.location.data,
             filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
         )
 
@@ -160,6 +169,11 @@ def internacional():
             submitted=True,
             form=form,
             message_to_send=message_to_send,
+            location=form.location.data,
+            country=form.country.data,
+            daily_stipend=international_values_dict_computable[form.country.data][
+                form.location.data
+            ],
         )
 
     return render_template("internacional.html", submitted=False, form=form)
