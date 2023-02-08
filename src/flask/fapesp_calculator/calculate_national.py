@@ -44,10 +44,13 @@ RESULTS = HERE.joinpath("results").resolve()
 import json
 
 
-def generate_template_for_natal(
+def generate_template_for_national_event(
     my_dict,
     event_start_date_time,
     event_end_date_time,
+    event_name_string="NOME DO EVENTO",
+    event_place_string="LOCAL DO EVENTO",
+    extra_day=True,
     arrival_before_and_after=True,
     category="Diárias Nacionais em bolsas",
     subcategory="Com pernoite",
@@ -74,10 +77,12 @@ def generate_template_for_natal(
     value_for_category = national_dict_computable[category][subcategory]
 
     message_to_send = f"""
-    Você tem direito a {event_duration.days+1} diárias do evento em si
+    Você tem direito a {event_duration.days+1} diárias pela duração do evento
     """
     total_daily_stipends = event_duration.days + 1
-    if arrival_before_and_after:
+    if extra_day:
+        print("ok")
+        print(extra_day)
         message_to_send += f"e mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
         total_daily_stipends += 1
 
@@ -93,12 +98,15 @@ def generate_template_for_natal(
     my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
     my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
     my_dict["data_final"] = data_por_extenso(event_end_date_time)
-    my_dict[
-        "adendo"
-    ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
 
-    my_dict["nome_do_evento"] = "Natal Bioinformatics Forum"
-    my_dict["local_do_evento"] = "Natal (RN)"
+    if extra_day:
+        my_dict[
+            "adendo"
+        ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
+    else:
+        my_dict["adendo"] = ""
+    my_dict["nome_do_evento"] = event_name_string
+    my_dict["local_do_evento"] = event_place_string
     my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
 
     docx_replace(doc, **my_dict)
@@ -109,7 +117,7 @@ def generate_template_for_natal(
 
 
 if __name__ == "__main__":
-    generate_template_for_natal(
+    generate_template_for_national_event(
         my_dict=my_dict,
         event_start_date_time=datetime(2023, 3, 29),
         event_end_date_time=datetime(2023, 3, 31),

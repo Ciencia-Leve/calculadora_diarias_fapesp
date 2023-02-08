@@ -33,145 +33,99 @@ from datetime import datetime
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from num2words import num2words
-from dados import my_dict
-import locale
+from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+
+# from dados import my_dict
 
 HERE = Path(__file__).parent.resolve()
 DATA = HERE.parent.joinpath("data").resolve()
-RESULTS = HERE.parent.joinpath("results").resolve()
+RESULTS = HERE.joinpath("results").resolve()
 import json
 
-locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
 
+def generate_template_for_international_event(
+    my_dict,
+    event_start_date_time,
+    event_end_date_time,
+    country="Itália",
+    subnational_location="Demais localidades",
+    event_name_string="NOME DO EVENTO",
+    event_place_string="LOCAL DO EVENTO",
+    extra_day=True,
+    usd_to_brl_rate=5.2,
+    template_path=HERE.joinpath("modelo_6_template_internacional.docx"),
+    filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
+):
 
-def main():
     international_values_dict = json.loads(
         RESULTS.joinpath("fapesp_international_values.json").read_text()
     )
 
     international_values_dict_computable = {}
 
-    for country, country_data in international_values_dict.items():
-        international_values_dict_computable[country] = dict()
+    for country_for_dict, country_data in international_values_dict.items():
+        international_values_dict_computable[country_for_dict] = dict()
 
-        for location, value in country_data.items():
-            international_values_dict_computable[country][location] = Money(
-                value.replace(",", "."), Currency.USD
-            )
-
-    levels_plus = (
-        "pesquisador dirigente coordenador assessor conselheiro pós-doutorando".split()
-    )
-    levels_base = ["bolsista (menos pós-doutorado)"]
-
-    current_level = "bolsista (menos pós-doutorado)"
-
-    daily_values_national = {
-        "Brasil (Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos)": {
-            "Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)": Money(
-                "555.00", Currency.BRL
-            )
-        },
-        "Brasil (bolsistas menos pós-doutorandos)": {
-            "Com pernoite": Money("255.00", Currency.BRL),
-            "Sem pernoite": Money("170.00", Currency.BRL),
-        },
-    }
-
-    arrival_date_time = datetime.fromisoformat("2023-04-23T00:15:00")
-    departure_date_time = datetime.fromisoformat("2023-04-28T00:19:00")
-
-    event_start_date_time = datetime.fromisoformat("2023-04-24T00:08:00")
-    event_end_date_time = datetime.fromisoformat("2023-04-26T00:16:00")
+        for location_for_dict, value in country_data.items():
+            international_values_dict_computable[country_for_dict][
+                location_for_dict
+            ] = Money(value.replace(",", "."), Currency.USD)
 
     event_duration = event_end_date_time - event_start_date_time
-    trip_time = departure_date_time - arrival_date_time
 
-    arrival_advance = event_start_date_time.day - arrival_date_time.day
-    departure_gap = departure_date_time.day - event_end_date_time.day
+    value_for_category = international_values_dict_computable[country][
+        subnational_location
+    ]
 
-    country = "Itália"
-    location = "Demais localidades"
+    message_to_send = f"""
+    Você tem direito a {event_duration.days+1} diárias pela duração do evento
+    """
+    total_daily_stipends = event_duration.days + 1
+    if extra_day:
+        message_to_send += f"e mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
+        total_daily_stipends += 1
 
-    value_for_location = international_values_dict_computable[country][location]
-    if (event_duration.seconds) > 0:
-        print(f"Considerando que o evento terá {event_duration.days+1} dias;")
-        print(f"E que você chegará {arrival_advance} dia(s) antes do evento;")
-        print(f"E que sairá {departure_gap} dia(s) depois do evento;")
+    value_in_usd = value_for_category * total_daily_stipends
 
-        print(f"Você tem direito a {event_duration.days+1} diárias do evento")
-        total_daily_stipends = event_duration.days + 1
-        if arrival_advance > 0 and departure_gap > 0:
-            print(
-                f"E mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
-            )
-            total_daily_stipends += 1
+    brl_calculation = float(value_in_usd.amount) * usd_to_brl_rate
 
-        print(
-            f"O valor que você pode solicitar para a localidade escolhida é de {value_for_location*total_daily_stipends},"
-            f" correspondendo a {total_daily_stipends} x {str(value_for_location)}."
-        )
+    print(brl_calculation)
+    value_in_brl = Money("{:.2f}".format(round(brl_calculation, 2)), Currency.BRL)
 
-        doc = Document("modelo_6_template.docx")
+    message_to_send += f"""
+        <p> O valor que você pode solicitar para a localidade escolhida é de {value_in_usd},
+        correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
+        <p> Considerando uma taxa de conversão de {str(usd_to_brl_rate)}, o valor em reais solicitado será de {value_in_brl}
+    """
+    doc = Document(template_path)
 
-        value_in_brl = "100,25"
-        print(number_to_long_number("100,25"))
+    my_dict["valor_em_dolar"] = str(value_in_usd.amount).replace(".", ",")
 
-        my_dict["valor_em_reais"] = value_in_brl
-        my_dict["valor_por_extenso"] = number_to_long_number(value_in_brl)
-        my_dict["data_inicial"] = event_start_date_time.strftime("%d de %B de %Y")
-        my_dict["data_final"] = event_end_date_time.strftime("%d de %B de %Y")
+    my_dict["valor_em_reais"] = str(value_in_brl.amount).replace(".", ",")
+    my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
+    my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
+    my_dict["data_final"] = data_por_extenso(event_end_date_time)
+
+    if extra_day:
         my_dict[
             "adendo"
         ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
-
-        my_dict["nome_do_evento"] = "Natal Bioinformatics Forum"
-        my_dict["local_do_evento"] = "Natal (RN)"
-        my_dict["data_de_hoje"] = datetime.now().strftime("%d de %B de %Y")
-
-        docx_replace(doc, **my_dict)
-
-        doc.save(f"modelo_preenchido.docx")
-
-
-def number_to_long_number(number_p):
-    if number_p.find(",") != -1:
-        number_p = number_p.split(",")
-        number_p1 = int(number_p[0].replace(".", ""))
-        number_p2 = int(number_p[1])
     else:
-        number_p1 = int(number_p.replace(".", ""))
-        number_p2 = 0
+        my_dict["adendo"] = ""
+    my_dict["nome_do_evento"] = event_name_string
+    my_dict["local_do_evento"] = event_place_string
+    my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
 
-    if number_p1 == 1:
-        aux1 = " real"
-    else:
-        aux1 = " reais"
+    docx_replace(doc, **my_dict)
 
-    if number_p2 == 1:
-        aux2 = " centavo"
-    else:
-        aux2 = " centavos"
+    doc.save(filled_template_path)
 
-    text1 = ""
-    if number_p1 > 0:
-        text1 = num2words(number_p1, lang="pt") + str(aux1)
-    else:
-        text1 = ""
-
-    if number_p2 > 0:
-        text2 = num2words(number_p2, lang="pt") + str(aux2)
-    else:
-        text2 = ""
-
-    if number_p1 > 0 and number_p2 > 0:
-        result = text1 + " e " + text2
-    else:
-        result = text1 + text2
-
-    return result
+    return message_to_send
 
 
 if __name__ == "__main__":
-    main()
+    generate_template_for_international_event(
+        my_dict=my_dict,
+        event_start_date_time=datetime(2023, 3, 29),
+        event_end_date_time=datetime(2023, 3, 31),
+    )

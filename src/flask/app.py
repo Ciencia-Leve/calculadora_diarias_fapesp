@@ -9,7 +9,7 @@ from wtforms.validators import InputRequired, Optional
 import flask
 from flask import Flask, redirect, render_template, request, send_from_directory
 from datetime import datetime, date
-from fapesp_calculator.calculate_national import *
+from fapesp_calculator.calculate_international import *
 from fapesp_calculator.por_extenso import data_por_extenso
 import os
 from pathlib import Path
@@ -54,6 +54,18 @@ class dailyStipendForm(FlaskForm):
         validators=[InputRequired()],
     )
 
+    plus_day = RadioField(
+        "Chegada em dia anterior (ou antes) e saída em dia posterior (ou depois) ao evento?",
+        default="sim",
+        choices=[
+            ("sim", "sim"),
+            ("não", "não"),
+        ],
+    )
+
+
+class dailyStipendNationalForm(dailyStipendForm):
+
     level = RadioField(
         "Posição",
         choices=[
@@ -82,38 +94,75 @@ class dailyStipendFormWithPersonalInfo(dailyStipendForm):
     cidade = StringField("Cidade", default="CIDADE", validators=[Optional()])
 
 
-@app.route("/natal/", methods=["GET", "POST"])
-@app.route("/natal", methods=["GET", "POST"])
-def projectlist_base():
+@app.route("/internacional/", methods=["GET", "POST"])
+@app.route("/internacional", methods=["GET", "POST"])
+def internacional():
     form = dailyStipendForm()
+
     if form.validate_on_submit():
         my_dict = {}
-        print(form.event_end_date.data)
-        if form.level.data == "base":
-            message_to_send = generate_template_for_natal(
-                my_dict=my_dict,
-                event_start_date_time=form.event_start_date.data,
-                event_end_date_time=form.event_end_date.data,
-                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
-            )
-        if form.level.data == "plus":
-            message_to_send = generate_template_for_natal(
-                my_dict=my_dict,
-                event_start_date_time=form.event_start_date.data,
-                event_end_date_time=form.event_end_date.data,
-                category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
-                subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
-                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
-            )
+        if form.plus_day.data == "sim":
+            extra_day = True
+        else:
+            extra_day = False
+
+        message_to_send = generate_template_for_international_event(
+            my_dict=my_dict,
+            event_start_date_time=form.event_start_date.data,
+            event_end_date_time=form.event_end_date.data,
+            extra_day=extra_day,
+            filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+        )
 
         return render_template(
-            "natal.html",
+            "internacional.html",
             submitted=True,
             form=form,
             message_to_send=message_to_send,
         )
 
-    return render_template("natal.html", submitted=False, form=form)
+    return render_template("internacional.html", submitted=False, form=form)
+
+
+@app.route("/nacional/", methods=["GET", "POST"])
+@app.route("/nacional", methods=["GET", "POST"])
+def nacional():
+    form = dailyStipendNationalForm()
+
+    if form.validate_on_submit():
+        my_dict = {}
+        if form.plus_day.data == "sim":
+            extra_day = True
+        else:
+            extra_day = False
+
+        if form.level.data == "base":
+            message_to_send = generate_template_for_national_event(
+                my_dict=my_dict,
+                event_start_date_time=form.event_start_date.data,
+                event_end_date_time=form.event_end_date.data,
+                extra_day=extra_day,
+                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+            )
+        if form.level.data == "plus":
+            message_to_send = generate_template_for_national_event(
+                my_dict=my_dict,
+                event_start_date_time=form.event_start_date.data,
+                event_end_date_time=form.event_end_date.data,
+                category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
+                subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
+                extra_day=extra_day,
+                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+            )
+
+        return render_template(
+            "nacional.html",
+            submitted=True,
+            form=form,
+            message_to_send=message_to_send,
+        )
+
+    return render_template("nacional.html", submitted=False, form=form)
 
 
 @app.route("/about")

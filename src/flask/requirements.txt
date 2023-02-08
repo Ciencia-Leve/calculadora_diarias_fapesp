@@ -9,3 +9,4 @@ py-money
 pathlib
 python-docx
 python-docx-replace
+forex-python
