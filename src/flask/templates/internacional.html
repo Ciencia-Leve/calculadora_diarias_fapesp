@@ -35,7 +35,25 @@ Calculadora de Diárias para FAPESP
     <input type="submit" value="Calcular">
     <h4> Site em construção; sistema funcionando para "Itália" --> "Demais localidades" </h4>
   </form>
+  <script>
+    let country_select = document.getElementById("country");
+    let location_select = document.getElementById("location");
 
+    country_select.onchange = function () {
+      country = country_select.value;
+      fetch("/location/" + country).then(function (response) {
+        response.json().then(function (data) {
+          let optionHTML = "";
+          for (let location of data.locations) {
+            optionHTML += '<option value="' + location.name + '">' + location.name + "</option>";
+          }
+          location_select.innerHTML = optionHTML;
+        });
+
+      });
+    };
+  </script>
 
 </div>
+
 {% endblock %}

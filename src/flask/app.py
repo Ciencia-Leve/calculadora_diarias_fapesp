@@ -3,11 +3,25 @@
 from email.policy import default
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, IntegerField, StringField, RadioField, DateField
+from wtforms import (
+    BooleanField,
+    IntegerField,
+    StringField,
+    RadioField,
+    DateField,
+    SelectField,
+)
 from wtforms.validators import InputRequired, Optional
 
 import flask
-from flask import Flask, redirect, render_template, request, send_from_directory
+from flask import (
+    Flask,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+)
 from datetime import datetime, date
 from fapesp_calculator.calculate_international import *
 from fapesp_calculator.por_extenso import data_por_extenso
@@ -15,6 +29,21 @@ import os
 from pathlib import Path
 
 APP = Path(__file__).parent.resolve()
+
+
+international_values_dict = json.loads(
+    RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
+)
+
+international_values_dict_computable = {}
+
+for country_for_dict, country_data in international_values_dict.items():
+    international_values_dict_computable[country_for_dict] = dict()
+
+    for location_for_dict, value in country_data.items():
+        international_values_dict_computable[country_for_dict][
+            location_for_dict
+        ] = Money(value.replace(",", "."), Currency.USD)
 
 app = Flask(__name__)
 
@@ -64,6 +93,16 @@ class dailyStipendForm(FlaskForm):
     )
 
 
+class dailyStipendInternationalForm(dailyStipendForm):
+    country = SelectField(
+        "Country",
+        choices=[(a, a) for a in list(international_values_dict_computable.keys())],
+        default="Albânia",
+    )
+
+    location = SelectField("Category", choices=[])
+
+
 class dailyStipendNationalForm(dailyStipendForm):
 
     level = RadioField(
@@ -97,8 +136,10 @@ class dailyStipendFormWithPersonalInfo(dailyStipendForm):
 @app.route("/internacional/", methods=["GET", "POST"])
 @app.route("/internacional", methods=["GET", "POST"])
 def internacional():
-    form = dailyStipendForm()
-
+    form = dailyStipendInternationalForm()
+    form.location.choices = [
+        (a, a) for a in list(international_values_dict_computable["Albânia"].keys())
+    ]
     if form.validate_on_submit():
         my_dict = {}
         if form.plus_day.data == "sim":
@@ -122,6 +163,14 @@ def internacional():
         )
 
     return render_template("internacional.html", submitted=False, form=form)
+
+
+@app.route("/location/<country>")
+def location(country):
+    locations = [
+        {"name": a} for a in list(international_values_dict_computable[country].keys())
+    ]
+    return jsonify({"locations": locations})
 
 
 @app.route("/nacional/", methods=["GET", "POST"])
