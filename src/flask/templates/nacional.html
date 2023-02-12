@@ -25,12 +25,24 @@ Calculadora de Diárias para FAPESP
   <h2>Formulário</h2>
   <form method="POST">
 
-    {% for entry in form %}
+
+
     <div>
       {{ form.csrf_token }}
-      {{ entry.label }} {{ entry(size=20) }}
+      {{ form.event_start_date.label }} {{ form.event_start_date(size=20) }}
     </div>
-    {% endfor %}
+    <div>
+      {{ form.csrf_token }}
+      {{ form.event_end_date.label }} {{ form.event_end_date(size=20) }}
+    </div>
+    <div>
+      {{ form.csrf_token }}
+      {{ form.plus_day.label }} {{ form.plus_day(size=20) }}
+    </div>
+    <div>
+      {{ form.csrf_token }}
+      {{ form.level.label }} {{ form.level }}
+    </div>
 
     <input type="submit" value="Calcular">
     <h4> Site em construção; sistema funcionando somente para capitais de Estado, Angra dos Reis (RJ), Brasília (DF),

@@ -8,37 +8,45 @@ Calculadora de Diárias para FAPESP
 
 
 <div class="container">
-
-
   {% if submitted %}
-
   <h2> Resultado:</h2>
   <ul>
     <li><strong>País:</strong> {{country}}</li>
     <li><strong>Local:</strong> {{location}}</li>
     <li><strong>Diária:</strong> {{daily_stipend}}</li>
-
   </ul>
-
   {{message_to_send | safe}}
 
   <p> Recibo de diárias semi-preenchido:
-
-
     <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo preenchido (faltando assinatura)</a>
   </p>
   {% endif %}
+
   {{download_url|safe}}
+
   <h2>Formulário</h2>
   <form method="POST">
 
-    {% for entry in form %}
     <div>
       {{ form.csrf_token }}
-      {{ entry.label }} {{ entry(size=20) }}
+      {{ form.event_start_date.label }} {{ form.event_start_date(size=20) }}
     </div>
-    {% endfor %}
-
+    <div>
+      {{ form.csrf_token }}
+      {{ form.event_end_date.label }} {{ form.event_end_date(size=20) }}
+    </div>
+    <div>
+      {{ form.csrf_token }}
+      {{ form.plus_day.label }} {{ form.plus_day(size=20) }}
+    </div>
+    <div>
+      {{ form.csrf_token }}
+      {{ form.country.label }} {{ form.country }}
+    </div>
+    <div>
+      {{ form.csrf_token }}
+      {{ form.location.label }} {{ form.location}}
+    </div>
     <input type="submit" value="Calcular">
   </form>
   <script>
