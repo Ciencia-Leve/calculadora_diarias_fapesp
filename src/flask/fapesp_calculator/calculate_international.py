@@ -29,11 +29,11 @@
 
 from money.money import Money
 from money.currency import Currency
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+from por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
 
 # from dados import my_dict
@@ -87,8 +87,17 @@ def generate_template_for_international_event(
 
     value_in_usd = value_for_category * total_daily_stipends
 
-    today_formatted = datetime.now().strftime("%m-%d-%Y")
-    conversion_url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{today_formatted}'&$top=100&$format=json&$select=cotacaoCompra,dataHoraCotacao"
+    today_formatted = datetime.now()
+    weekday = today_formatted.weekday()
+    if weekday == 6:
+        day_for_url = today_formatted - timedelta(2)
+    elif weekday == 5:
+        day_for_url = today_formatted - timedelta(1)
+    else:
+        day_for_url = today_formatted
+
+    day_for_url = day_for_url.strftime("%m-%d-%Y")
+    conversion_url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{day_for_url}'&$top=100&$format=json&$select=cotacaoCompra,dataHoraCotacao"
 
     r = requests.get(conversion_url)
     data = r.json()
