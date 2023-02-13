@@ -40,9 +40,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="navbar-nav mr-auto mt-2">
-        <li class="nav-item"><a class="nav-link" href="/">Página principal</a></li>
-        <li class="nav-item"><a class="nav-link" href="/nacional">Evento Nacional</a></li>
-        <li class="nav-item"><a class="nav-link" href="/internacional">Evento Internacional</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Página principal</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('nacional') }}">Evento Nacional</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('internacional') }}">Evento Internacional</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
       </ul>
     </div>
   </nav>
