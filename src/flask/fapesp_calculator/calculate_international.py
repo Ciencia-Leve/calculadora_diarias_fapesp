@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+from por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
 
 # from dados import my_dict
@@ -87,22 +87,10 @@ def generate_template_for_international_event(
 
     value_in_usd = value_for_category * total_daily_stipends
 
-    today_formatted = datetime.now()
-    weekday = today_formatted.weekday()
-    if weekday == 6:
-        day_for_url = today_formatted - timedelta(2)
-    elif weekday == 5:
-        day_for_url = today_formatted - timedelta(1)
-    else:
-        day_for_url = today_formatted
+    today = datetime.now()
 
-    day_for_url = day_for_url.strftime("%m-%d-%Y")
-    conversion_url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{day_for_url}'&$top=100&$format=json&$select=cotacaoCompra,dataHoraCotacao"
+    conversion_url, usd_to_brl_rate = get_conversion_for_date(today)
 
-    r = requests.get(conversion_url)
-    data = r.json()
-
-    usd_to_brl_rate = float(data["value"][0]["cotacaoCompra"])
     brl_calculation = float(value_in_usd.amount) * usd_to_brl_rate
 
     print(brl_calculation)
@@ -138,6 +126,22 @@ def generate_template_for_international_event(
     doc.save(filled_template_path)
 
     return message_to_send
+
+
+def get_conversion_for_date(today):
+    day_for_url = today.strftime("%m-%d-%Y")
+
+    conversion_url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{day_for_url}'&$top=100&$format=json&$select=cotacaoCompra,dataHoraCotacao"
+
+    r = requests.get(conversion_url)
+    data = r.json()
+    if len(data["value"]) == 0:
+        day = today - timedelta(1)
+        conversion_url, usd_to_brl_rate = get_conversion_for_date(day)
+
+    else:
+        usd_to_brl_rate = float(data["value"][0]["cotacaoCompra"])
+    return conversion_url, usd_to_brl_rate
 
 
 if __name__ == "__main__":
