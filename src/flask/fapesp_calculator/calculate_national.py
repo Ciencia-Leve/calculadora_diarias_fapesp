@@ -121,6 +121,6 @@ if __name__ == "__main__":
         my_dict=my_dict,
         event_start_date_time=datetime(2023, 3, 29),
         event_end_date_time=datetime(2023, 3, 31),
-        category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
+        category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
         subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
     )
