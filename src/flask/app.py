@@ -70,6 +70,16 @@ def after_request(response):
 def index():
     return flask.render_template("index.html")
 
+@app.route("/faq")
+def faq():
+    return flask.render_template("faq.html")
+
+@app.route("/pr35")
+def pr35():
+    return flask.render_template("pr35.html")
+
+
+
 
 class dailyStipendForm(FlaskForm):
 
