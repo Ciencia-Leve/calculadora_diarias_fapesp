@@ -201,8 +201,10 @@ def location(country):
 @app.route("/nacional", methods=["GET", "POST"])
 def nacional():
     form = dailyStipendNationalForm()
+    print("HERE")
 
-    if form.validate_on_submit():
+    if request.method == "POST":
+        print("VALIDATED")
         my_dict = {}
         if form.plus_day.data == "sim":
             extra_day = True

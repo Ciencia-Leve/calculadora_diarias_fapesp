@@ -11,27 +11,28 @@ Calculadora de Diárias para FAPESP
 
 
   {% if submitted %}
-  <h3>Note: a calculadora não considera o limite que a FAPESP impõe por categoria. As diárias para um evento não
-    podem exceder a bolsa mensal!</h3>
-  <p> Para mais detalhes, veja o <a href="https://fapesp.br/14018/portaria-pr-no-35-texto-compilado"
-      target="_blank">Artigo 5 da
-      Portaria 35</a>.</p>
+  <div class="alert alert-danger" role="alert">
+    Note: a calculadora não considera o limite que a FAPESP impõe por categoria. As diárias para um evento nacional
+    não
+    podem exceder a bolsa mensal!
+    <p> Para mais detalhes, veja o <a href="https://fapesp.br/14018/portaria-pr-no-35-texto-compilado"
+        target="_blank">Artigo 5 da
+        Portaria 35</a>.
+  </div>
+
+  </p>
 
   <h2> Resultado:</h2>
   {{message_to_send | safe}}
 
   <p> Recibo de diárias semi-preenchido:
 
-
     <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo preenchido (faltando assinatura)</a>
   </p>
   {% endif %}
   {{download_url|safe}}
   <h2>Formulário</h2>
-  <form method=" POST">
-
-
-
+  <form method="POST">
     <div>
       {{ form.csrf_token }}
       {{ form.event_start_date.label }} {{ form.event_start_date(size=20) }}
