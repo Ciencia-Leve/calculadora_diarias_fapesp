@@ -9,6 +9,14 @@ Calculadora de Diárias para FAPESP
 
 <div class="container">
   {% if submitted %}
+
+  <div class="alert alert-danger" role="alert">
+    Note: a calculadora abaixo não considera o limite que a FAPESP impõe por categoria. As diárias para um evento
+    internacional são no máximo 7 para bolsistas e 10 para pesquisadores! <p> Para mais detalhes, veja o <a
+        href="https://fapesp.br/14018/portaria-pr-no-35-texto-compilado" target="_blank">Artigo 5 da
+        Portaria 35</a>.</p>
+  </div>
+
   <h2> Resultado:</h2>
   <ul>
     <li><strong>País:</strong> {{country}}</li>
@@ -30,22 +38,38 @@ Calculadora de Diárias para FAPESP
     <div>
       {{ form.csrf_token }}
       {{ form.event_start_date.label }} {{ form.event_start_date(size=20) }}
+      {% for error in form.event_start_date.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
     </div>
     <div>
       {{ form.csrf_token }}
       {{ form.event_end_date.label }} {{ form.event_end_date(size=20) }}
+      {% for error in form.event_end_date.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
     </div>
+
     <div>
       {{ form.csrf_token }}
       {{ form.plus_day.label }} {{ form.plus_day(size=20) }}
+      {% for error in form.event_end_date.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
     </div>
     <div>
       {{ form.csrf_token }}
       {{ form.country.label }} {{ form.country }}
+      {% for error in form.event_end_date.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
     </div>
     <div>
       {{ form.csrf_token }}
       {{ form.location.label }} {{ form.location}}
+      {% for error in form.event_end_date.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
     </div>
     <input type="submit" value="Calcular">
   </form>

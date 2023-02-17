@@ -2,17 +2,27 @@
 
 from email.policy import default
 from flask_bootstrap import Bootstrap5
+from flask_wtf import FlaskForm
+from wtforms import (
+    BooleanField,
+    IntegerField,
+    StringField,
+    RadioField,
+    DateField,
+    SelectField,
+)
+from wtforms.validators import InputRequired, Optional, DataRequired
 
 import flask
 from flask import (
     Flask,
     jsonify,
-    flash,
+    redirect,
     render_template,
     request,
     send_from_directory,
-    redirect,
 )
+from datetime import datetime, date
 from fapesp_calculator.calculate_international import *
 from fapesp_calculator.calculate_national import *
 
@@ -20,9 +30,6 @@ from fapesp_calculator.por_extenso import data_por_extenso
 import os
 from pathlib import Path
 import requests
-from config import Config
-from forms import *
-
 
 APP = Path(__file__).parent.resolve()
 
@@ -43,7 +50,7 @@ for country_for_dict, country_data in international_values_dict.items():
 
 app = Flask(__name__)
 
-app.config.from_object(Config)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 Bootstrap5(app)
 
 # Ensure templates are auto-reloaded
@@ -60,27 +67,84 @@ def after_request(response):
 
 
 @app.route("/")
-def index_base():
-    return flask.render_template("index.html")
-
-
-@app.route("/index")
 def index():
     return flask.render_template("index.html")
 
+@app.route("/faq")
+def faq():
+    return flask.render_template("faq.html")
 
-@app.route("/login", methods=["GET", "POST"])
-@app.route("/login")
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash(
-            "Login requested for user {}, remember_me={}".format(
-                form.username.data, form.remember_me.data
-            )
-        )
-        return redirect("/index")
-    return render_template("login.html", title="Sign In", form=form)
+@app.route("/pr35")
+def pr35():
+    return flask.render_template("pr35.html")
+
+
+
+
+class dailyStipendForm(FlaskForm):
+
+    event_start_date = DateField(
+        "Data de Início do Evento",
+        format="%Y-%m-%d",
+        default=date(2023, 3, 29),
+        validators=[InputRequired()],
+    )
+    event_end_date = DateField(
+        "Data de Término do Evento",
+        format="%Y-%m-%d",
+        default=date(2023, 3, 31),
+        validators=[InputRequired()],
+    )
+
+    plus_day = RadioField(
+        "Chegada em dia anterior (ou antes) e saída em dia posterior (ou depois) ao evento?",
+        default="sim",
+        choices=[
+            ("sim", "sim"),
+            ("não", "não"),
+        ],
+    )
+
+
+class dailyStipendInternationalForm(dailyStipendForm):
+    country = SelectField(
+        "Country",
+        choices=[(a, a) for a in list(international_values_dict_computable.keys())],
+        default="Albânia",
+        validators=[Optional()],
+    )
+
+    location = SelectField("Location", choices=[], validators=[Optional()])
+
+
+class dailyStipendNationalForm(dailyStipendForm):
+
+    level = RadioField(
+        "Posição",
+        choices=[
+            ("base", "IC, mestrado ou doutorado"),
+            ("plus", "Pós-Doc e além"),
+        ],
+    )
+
+
+class dailyStipendFormWithPersonalInfo(dailyStipendForm):
+
+    name = StringField(
+        "Nome completo", default="NOME COMPLETO", validators=[Optional()]
+    )
+    n_do_processo = StringField(
+        "Número do Processo", default="NÚMERO DO PROCESSO", validators=[Optional()]
+    )
+    cpf = StringField("CPF", default="CPF", validators=[Optional()])
+    identidade = StringField(
+        "Identidade", default="IDENTIDADE", validators=[Optional()]
+    )
+    endereço = StringField(
+        "Endereço (rua e número)", default="ENDEREÇO", validators=[Optional()]
+    )
+    bairro = StringField("Bairro", default="BAIRRO", validators=[Optional()])
+    cidade = StringField("Cidade", default="CIDADE", validators=[Optional()])
 
 
 @app.route("/internacional/", methods=["GET", "POST"])
@@ -91,7 +155,7 @@ def internacional():
         (a, a) for a in list(international_values_dict_computable["Albânia"].keys())
     ]
 
-    if request.method == "POST":
+    if request.method == 'POST' and form.validate():
 
         print("RUNNING CODE")
         my_dict = {}
@@ -137,8 +201,10 @@ def location(country):
 @app.route("/nacional", methods=["GET", "POST"])
 def nacional():
     form = dailyStipendNationalForm()
+    print("HERE")
 
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate():
+        print("VALIDATED")
         my_dict = {}
         if form.plus_day.data == "sim":
             extra_day = True
