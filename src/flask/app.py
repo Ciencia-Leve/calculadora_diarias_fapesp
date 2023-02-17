@@ -155,7 +155,7 @@ def internacional():
         (a, a) for a in list(international_values_dict_computable["Albânia"].keys())
     ]
 
-    if request.method == "POST":
+    if request.method == 'POST' and form.validate():
 
         print("RUNNING CODE")
         my_dict = {}
@@ -203,7 +203,7 @@ def nacional():
     form = dailyStipendNationalForm()
     print("HERE")
 
-    if request.method == "POST":
+    if request.method == 'POST' and form.validate():
         print("VALIDATED")
         my_dict = {}
         if form.plus_day.data == "sim":
@@ -224,7 +224,7 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
-                category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos ",
+                category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
                 subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
                 extra_day=extra_day,
                 filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
