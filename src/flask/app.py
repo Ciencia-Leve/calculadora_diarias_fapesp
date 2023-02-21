@@ -17,22 +17,59 @@ import flask
 from flask import (
     Flask,
     jsonify,
+    flash,
+    url_for,
     redirect,
     render_template,
     request,
     send_from_directory,
 )
-from datetime import datetime, date
+from datetime import  date, datetime
 from fapesp_calculator.calculate_international import *
 from fapesp_calculator.calculate_national import *
-
+from config import Config
 from fapesp_calculator.por_extenso import data_por_extenso
 import os
 from pathlib import Path
-import requests
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import current_user, login_user,LoginManager, UserMixin, login_required
+from forms import *
+
+app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+login = LoginManager(app)
 
 APP = Path(__file__).parent.resolve()
 
+class User(db.Model, UserMixin):
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String(64), index=True, unique=True)
+  email = db.Column(db.String(120), index=True, unique=True)
+  password_hash = db.Column(db.String(128))
+  def set_password(self, password):
+    self.password_hash = generate_password_hash(password)
+  def check_password(self, password):
+    return check_password_hash(self.password_hash, password)
+  def __repr__(self):
+   return '<User {}>'.format(self.username)
+
+
+class Post(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  body = db.Column(db.String(140))
+  timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+  def __repr__(self):
+   return '<Post {}>'.format(self.body)
+
+@login.user_loader
+def load_user(id):
+  return User.query.get(int(id))
 
 international_values_dict = json.loads(
     RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
@@ -47,8 +84,6 @@ for country_for_dict, country_data in international_values_dict.items():
         international_values_dict_computable[country_for_dict][
             location_for_dict
         ] = Money(value.replace(",", "."), Currency.USD)
-
-app = Flask(__name__)
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 Bootstrap5(app)
@@ -79,72 +114,6 @@ def pr35():
     return flask.render_template("pr35.html")
 
 
-
-
-class dailyStipendForm(FlaskForm):
-
-    event_start_date = DateField(
-        "Data de Início do Evento",
-        format="%Y-%m-%d",
-        default=date(2023, 3, 29),
-        validators=[InputRequired()],
-    )
-    event_end_date = DateField(
-        "Data de Término do Evento",
-        format="%Y-%m-%d",
-        default=date(2023, 3, 31),
-        validators=[InputRequired()],
-    )
-
-    plus_day = RadioField(
-        "Chegada em dia anterior (ou antes) e saída em dia posterior (ou depois) ao evento?",
-        default="sim",
-        choices=[
-            ("sim", "sim"),
-            ("não", "não"),
-        ],
-    )
-
-
-class dailyStipendInternationalForm(dailyStipendForm):
-    country = SelectField(
-        "Country",
-        choices=[(a, a) for a in list(international_values_dict_computable.keys())],
-        default="Albânia",
-        validators=[Optional()],
-    )
-
-    location = SelectField("Location", choices=[], validators=[Optional()])
-
-
-class dailyStipendNationalForm(dailyStipendForm):
-
-    level = RadioField(
-        "Posição",
-        choices=[
-            ("base", "IC, mestrado ou doutorado"),
-            ("plus", "Pós-Doc e além"),
-        ],
-    )
-
-
-class dailyStipendFormWithPersonalInfo(dailyStipendForm):
-
-    name = StringField(
-        "Nome completo", default="NOME COMPLETO", validators=[Optional()]
-    )
-    n_do_processo = StringField(
-        "Número do Processo", default="NÚMERO DO PROCESSO", validators=[Optional()]
-    )
-    cpf = StringField("CPF", default="CPF", validators=[Optional()])
-    identidade = StringField(
-        "Identidade", default="IDENTIDADE", validators=[Optional()]
-    )
-    endereço = StringField(
-        "Endereço (rua e número)", default="ENDEREÇO", validators=[Optional()]
-    )
-    bairro = StringField("Bairro", default="BAIRRO", validators=[Optional()])
-    cidade = StringField("Cidade", default="CIDADE", validators=[Optional()])
 
 
 @app.route("/internacional/", methods=["GET", "POST"])
@@ -197,6 +166,7 @@ def location(country):
     return jsonify({"locations": locations})
 
 
+@login_required
 @app.route("/nacional/", methods=["GET", "POST"])
 @app.route("/nacional", methods=["GET", "POST"])
 def nacional():
@@ -252,3 +222,22 @@ def download(filename):
 
     # Returning file from appended path
     return send_from_directory(directory=uploads, path=filename)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  if current_user.is_authenticated:
+    return redirect(url_for('index'))
+  form = LoginForm()
+  if form.validate_on_submit():
+    user = User.query.filter_by(username=form.username.data).first()
+    if user is None or not user.check_password(form.password.data):
+      flash('Invalid username or password')
+      return redirect(url_for('login'))
+    login_user(user, remember=form.remember_me.data)
+    return redirect(url_for('index'))
+  return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/logout')
+def logout():
+  logout_user()
+  return redirect(url_for('index'))

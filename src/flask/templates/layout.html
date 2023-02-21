@@ -25,6 +25,20 @@
   <link rel="icon" type="image/png" href="/static/logo.svg" />
   <title>Calculadora de Diárias FAPESP</title>
 
+  Muito obrigado, pessoal! Não sei se entra pela lista do SUS, não conheço bem, para ser sincero também. Vou dar uma
+  ohada.
+  Não ficaria tranquilo de abrir processo administrativo, com tanta gente precisando mais, mas muito bom saber que é
+  possível. Eu usei bastante o Hospital Universitário, e o SUS por extensão, mas tenho plano particular e por
+  privilégios de vida eu tenho a possibilidade de pedir para meus pais ajudarem ou cortar um pouco aqui e ali e pagar.
+  Levantei um pouco por que (1) até consigo dar jeito de pagar, mas não sou ricaço, e (2) pelo valor geral que uma
+  jurisprudencia do tipo pode trazer. Sei lá, pós-graduando é judiado de várias formas, taxa de depressão de 6x da base
+  da população.
+  A RT é um recurso já discriminado no orçamento, e com o objetivo de apoiar um bolsista no seu projeto de pesquisa.
+  Então, eu vejo justificativas morais, legais e trabalhistas para usos em saúde. A maior barreira (além do possível
+  não-gostar por parte dos burocratas) é em questão de PC, talvez, abrindo espaço para desvios. Acho que talvez um
+  recorte bem específico, e.g. remédios psicoativos com prescrição por um médico do SUS poderia ser adido às normas sem
+  maior desgaste.
+
 </head>
 
 <body>
@@ -44,7 +58,11 @@
         <li class="nav-item"><a class="nav-link" href="{{ url_for('nacional') }}">Evento Nacional</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('internacional') }}">Evento Internacional</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('faq') }}">Perguntas Frequentes</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+        {% if current_user.is_anonymous %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% else %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
     </div>
   </nav>
 
