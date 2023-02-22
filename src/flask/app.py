@@ -24,7 +24,8 @@ from flask import (
     request,
     send_from_directory,
 )
-from datetime import  date, datetime
+from werkzeug.urls import url_parse
+from datetime import date, datetime
 from fapesp_calculator.calculate_international import *
 from fapesp_calculator.calculate_national import *
 from config import Config
@@ -34,7 +35,13 @@ from pathlib import Path
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import current_user, login_user,LoginManager, UserMixin, login_required
+from flask_login import (
+    current_user,
+    login_user,
+    LoginManager,
+    UserMixin,
+    login_required,
+)
 from forms import *
 
 app = Flask(__name__)
@@ -43,33 +50,41 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
+login.login_view = "login"
 
 APP = Path(__file__).parent.resolve()
 
+
 class User(db.Model, UserMixin):
-  id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String(64), index=True, unique=True)
-  email = db.Column(db.String(120), index=True, unique=True)
-  password_hash = db.Column(db.String(128))
-  def set_password(self, password):
-    self.password_hash = generate_password_hash(password)
-  def check_password(self, password):
-    return check_password_hash(self.password_hash, password)
-  def __repr__(self):
-   return '<User {}>'.format(self.username)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return "<User {}>".format(self.username)
 
 
 class Post(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  body = db.Column(db.String(140))
-  timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-  def __repr__(self):
-   return '<Post {}>'.format(self.body)
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    def __repr__(self):
+        return "<Post {}>".format(self.body)
+
 
 @login.user_loader
 def load_user(id):
-  return User.query.get(int(id))
+    return User.query.get(int(id))
+
 
 international_values_dict = json.loads(
     RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
@@ -92,6 +107,7 @@ Bootstrap5(app)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["UPLOAD_FOLDER"] = "uploads"
 
+
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
@@ -105,15 +121,15 @@ def after_request(response):
 def index():
     return flask.render_template("index.html")
 
+
 @app.route("/faq")
 def faq():
     return flask.render_template("faq.html")
 
+
 @app.route("/pr35")
 def pr35():
     return flask.render_template("pr35.html")
-
-
 
 
 @app.route("/internacional/", methods=["GET", "POST"])
@@ -124,8 +140,7 @@ def internacional():
         (a, a) for a in list(international_values_dict_computable["Albânia"].keys())
     ]
 
-    if request.method == 'POST' and form.validate():
-
+    if request.method == "POST" and form.validate():
         print("RUNNING CODE")
         my_dict = {}
         if form.plus_day.data == "sim":
@@ -166,14 +181,14 @@ def location(country):
     return jsonify({"locations": locations})
 
 
-@login_required
 @app.route("/nacional/", methods=["GET", "POST"])
 @app.route("/nacional", methods=["GET", "POST"])
+@login_required
 def nacional():
     form = dailyStipendNationalForm()
     print("HERE")
 
-    if request.method == 'POST' and form.validate():
+    if request.method == "POST" and form.validate():
         print("VALIDATED")
         my_dict = {}
         if form.plus_day.data == "sim":
@@ -223,21 +238,26 @@ def download(filename):
     # Returning file from appended path
     return send_from_directory(directory=uploads, path=filename)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-  if current_user.is_authenticated:
-    return redirect(url_for('index'))
-  form = LoginForm()
-  if form.validate_on_submit():
-    user = User.query.filter_by(username=form.username.data).first()
-    if user is None or not user.check_password(form.password.data):
-      flash('Invalid username or password')
-      return redirect(url_for('login'))
-    login_user(user, remember=form.remember_me.data)
-    return redirect(url_for('index'))
-  return render_template('login.html', title='Sign In', form=form)
 
-@app.route('/logout')
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash("Invalid username or password")
+            return redirect(url_for("login"))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get("next")
+        if not next_page or url_parse(next_page).netloc != "":
+            next_page = url_for("index")
+        return redirect(next_page)
+    return render_template("login.html", title="Sign In", form=form)
+
+
+@app.route("/logout")
 def logout():
-  logout_user()
-  return redirect(url_for('index'))
+    logout_user()
+    return redirect(url_for("index"))
