@@ -1,39 +1,29 @@
-""" A flask app to connect iNaturalist to Wikidata."""
-
-from email.policy import default
-from flask_bootstrap import Bootstrap5
-from flask_wtf import FlaskForm
-from wtforms import (
-    BooleanField,
-    IntegerField,
-    StringField,
-    RadioField,
-    DateField,
-    SelectField,
-)
-from wtforms.validators import InputRequired, Optional, DataRequired
-
-import flask
+from app import app
 from flask import (
-    Flask,
-    jsonify,
-    flash,
-    url_for,
-    redirect,
     render_template,
+    flash,
+    redirect,
     request,
+    url_for,
     send_from_directory,
 )
+from app.forms import (
+    RegistrationForm,
+    LoginForm,
+    dailyStipendForm,
+    dailyStipendInternationalForm,
+    dailyStipendNationalForm,
+)
+from fapesp_calculator.por_extenso import data_por_extenso
+from fapesp_calculator.calculate_national import generate_template_for_national_event
+from fapesp_calculator.calculate_international import (
+    generate_template_for_international_event,
+)
+from app.values_dict import international_values_dict_computable
+import os
+from flask_login import logout_user
 from werkzeug.urls import url_parse
 from datetime import date, datetime
-from fapesp_calculator.calculate_international import *
-from fapesp_calculator.calculate_national import *
-from config import Config
-from fapesp_calculator.por_extenso import data_por_extenso
-import os
-from pathlib import Path
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import (
     current_user,
@@ -42,43 +32,15 @@ from flask_login import (
     UserMixin,
     login_required,
 )
-from forms import *
+from app.models import User, Post
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+from pathlib import Path
+
+HERE = Path(__file__).parent.resolve()
+
 
 login = LoginManager(app)
 login.login_view = "login"
-
-APP = Path(__file__).parent.resolve()
-
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return "<User {}>".format(self.username)
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-
-    def __repr__(self):
-        return "<Post {}>".format(self.body)
 
 
 @login.user_loader
@@ -86,50 +48,19 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-international_values_dict = json.loads(
-    RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
-)
-
-international_values_dict_computable = {}
-
-for country_for_dict, country_data in international_values_dict.items():
-    international_values_dict_computable[country_for_dict] = dict()
-
-    for location_for_dict, value in country_data.items():
-        international_values_dict_computable[country_for_dict][
-            location_for_dict
-        ] = Money(value.replace(",", "."), Currency.USD)
-
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-Bootstrap5(app)
-
-# Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config["UPLOAD_FOLDER"] = "uploads"
-
-
-# Ensure responses aren't cached
-@app.after_request
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
-
 @app.route("/")
 def index():
-    return flask.render_template("index.html")
+    return render_template("index.html")
 
 
 @app.route("/faq")
 def faq():
-    return flask.render_template("faq.html")
+    return render_template("faq.html")
 
 
 @app.route("/pr35")
 def pr35():
-    return flask.render_template("pr35.html")
+    return render_template("pr35.html")
 
 
 @app.route("/internacional/", methods=["GET", "POST"])
@@ -155,7 +86,7 @@ def internacional():
             extra_day=extra_day,
             country=form.country.data,
             subnational_location=form.location.data,
-            filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+            filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
         )
 
         return render_template(
@@ -202,7 +133,7 @@ def nacional():
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
                 extra_day=extra_day,
-                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+                filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
             )
         if form.level.data == "plus":
             message_to_send = generate_template_for_national_event(
@@ -212,7 +143,7 @@ def nacional():
                 category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
                 subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
                 extra_day=extra_day,
-                filled_template_path=APP.joinpath("uploads/modelo_preenchido.docx"),
+                filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
             )
 
         return render_template(

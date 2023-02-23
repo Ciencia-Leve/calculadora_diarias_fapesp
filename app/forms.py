@@ -9,9 +9,38 @@ from wtforms import (
     SelectField,
 )
 from wtforms.validators import DataRequired
-from wtforms.validators import InputRequired, Optional, DataRequired
+from wtforms.validators import (
+    InputRequired,
+    Optional,
+    DataRequired,
+    ValidationError,
+    DataRequired,
+    Email,
+    EqualTo,
+)
 from datetime import datetime, date
-from values_dict import international_values_dict_computable
+from app.values_dict import international_values_dict_computable
+from app.models import User
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    password2 = PasswordField(
+        "Repeat Password", validators=[DataRequired(), EqualTo("password")]
+    )
+    submit = SubmitField("Register")
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError("Please use a different username.")
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError("Please use a different email address.")
 
 
 class LoginForm(FlaskForm):
@@ -22,7 +51,6 @@ class LoginForm(FlaskForm):
 
 
 class dailyStipendForm(FlaskForm):
-
     event_start_date = DateField(
         "Data de Início do Evento",
         format="%Y-%m-%d",
@@ -58,7 +86,6 @@ class dailyStipendInternationalForm(dailyStipendForm):
 
 
 class dailyStipendNationalForm(dailyStipendForm):
-
     level = RadioField(
         "Posição",
         choices=[
@@ -69,7 +96,6 @@ class dailyStipendNationalForm(dailyStipendForm):
 
 
 class dailyStipendFormWithPersonalInfo(dailyStipendForm):
-
     name = StringField(
         "Nome completo", default="NOME COMPLETO", validators=[Optional()]
     )
