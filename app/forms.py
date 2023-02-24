@@ -7,8 +7,8 @@ from wtforms import (
     RadioField,
     DateField,
     SelectField,
+    TextAreaField,
 )
-from wtforms.validators import DataRequired
 from wtforms.validators import (
     InputRequired,
     Optional,
@@ -17,10 +17,23 @@ from wtforms.validators import (
     DataRequired,
     Email,
     EqualTo,
+    Length,
 )
 from datetime import datetime, date
 from app.values_dict import international_values_dict_computable
 from app.models import User
+
+
+class EditProfileForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    full_name = TextAreaField("Nome completo", validators=[Length(min=0, max=140)])
+    advisor_full_name = TextAreaField(
+        "Nome do orientador/a", validators=[Length(min=0, max=140)]
+    )
+    fapesp_process_number = TextAreaField(
+        "Número do processo FAPESP", validators=[Length(min=0, max=140)]
+    )
+    submit = SubmitField("Submit")
 
 
 class RegistrationForm(FlaskForm):

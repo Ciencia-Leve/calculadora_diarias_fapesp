@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block main %}
+<div class="container">
+  <table>
+    <tr valign="top">
+      <td><img src="{{ user.avatar(128) }}"></td>
+      <td>
+
+        <h1>User: {{ user.username }}</h1>
+        {% if user.full_name %}<p> <strong>Nome completo:</strong> {{ user.full_name }}</p>{% endif %}
+        {% if user.advisor_full_name %}<p><strong>Nome do orientador/a:</strong> {{ user.advisor_full_name }}</p>
+        {% endif %}
+        {% if user.fapesp_process_number %}<p><strong>Processo FAPESP principal:</strong>
+          {{ user.fapesp_process_number }}</p>{% endif %}
+        {% if user.last_seen %}<p><strong>Last seen on:</strong> {{ user.last_seen }}</p>{% endif %}
+        {% if user == current_user %}
+        <p><a href="{{ url_for('edit_profile') }}">Edite seu perfil</a></p>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  <hr>
+  {% for post in posts %}
+  {% include '_post.html' %}
+  {% endfor %}
+</div>
+{% endblock %}

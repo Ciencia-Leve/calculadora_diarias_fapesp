@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block main %}
+<h1>Edit Profile</h1>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.username.label }}<br>
+    {{ form.username(size=32) }}<br>
+    {% for error in form.username.errors %}
+    <span style="color: red;">[{{ error }}]</span>{% endfor %}
+  </p>
+  <p>
+    {{ form.full_name.label }}<br>
+    {{ form.full_name(cols=50, rows=4) }}<br>
+    {% for error in form.full_name.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.advisor_full_name.label }}<br>
+    {{ form.advisor_full_name(cols=50, rows=4) }}<br>
+    {% for error in form.advisor_full_name.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.fapesp_process_number.label }}<br>
+    {{ form.fapesp_process_number(cols=50, rows=4) }}<br>
+    {% for error in form.fapesp_process_number.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}

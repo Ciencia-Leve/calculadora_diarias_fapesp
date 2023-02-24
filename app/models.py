@@ -2,6 +2,7 @@ from app import db
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from hashlib import md5
 
 
 class User(UserMixin, db.Model):
@@ -9,6 +10,11 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    full_name = db.Column(db.String(140))
+    advisor_full_name = db.Column(db.String(140))
+    fapesp_process_number = db.Column(db.String(140))
+
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return "<User {}>".format(self.username)
@@ -18,6 +24,12 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode("utf-8")).hexdigest()
+        return "https://www.gravatar.com/avatar/{}?d=identicon&s={}".format(
+            digest, size
+        )
 
 
 class Post(UserMixin, db.Model):

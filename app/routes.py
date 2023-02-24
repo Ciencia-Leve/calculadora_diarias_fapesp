@@ -1,4 +1,4 @@
-from app import app
+from app import app, db
 from flask import (
     render_template,
     flash,
@@ -6,6 +6,7 @@ from flask import (
     request,
     url_for,
     send_from_directory,
+    jsonify,
 )
 from app.forms import (
     RegistrationForm,
@@ -35,6 +36,8 @@ from flask_login import (
 from app.models import User, Post
 
 from pathlib import Path
+from datetime import datetime
+from app.forms import EditProfileForm
 
 HERE = Path(__file__).parent.resolve()
 
@@ -46,6 +49,36 @@ login.login_view = "login"
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+    db.session.commit()
+
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.full_name = form.full_name.data
+
+        current_user.advisor_full_name = form.advisor_full_name.data
+        current_user.fapesp_process_number = form.fapesp_process_number.data
+
+        db.session.commit()
+        flash("Your changes have been saved.")
+        return redirect(url_for("edit_profile"))
+    elif request.method == "GET":
+        form.username.data = current_user.username
+        form.fapesp_process_number.data = current_user.fapesp_process_number
+        form.full_name.data = current_user.full_name
+        form.advisor_full_name.data = current_user.advisor_full_name
+
+    return render_template("edit_profile.html", title="Edit Profile", form=form)
 
 
 @app.route("/")
@@ -192,3 +225,29 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("index"))
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash("Congratulations, you are now a registered user!")
+        return redirect(url_for("login"))
+    return render_template("register.html", title="Register", form=form)
+
+
+@app.route("/user/<username>")
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {"author": user, "body": "Test post #1"},
+        {"author": user, "body": "Test post #2"},
+    ]
+    return render_template("user.html", user=user, posts=posts)
