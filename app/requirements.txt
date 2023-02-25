@@ -12,3 +12,4 @@ python-docx-replace
 forex-python
 Flask-SQLAlchemy
 flask-migrate 
+flask-login
