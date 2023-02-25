@@ -1,2 +1,37 @@
 *dados.py
 *preenchido*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local development settings
+instance/
+*.env
+
+# Logs and databases
+*.log
+*.sqlite
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Other generated files
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.orig
+
+# Other miscellaneous files
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+
+
+
+
