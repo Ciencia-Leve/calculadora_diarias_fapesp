@@ -11,4 +11,4 @@ python-docx
 python-docx-replace
 forex-python
 Flask-SQLAlchemy
-python3-flask-migrate 
+flask-migrate 
