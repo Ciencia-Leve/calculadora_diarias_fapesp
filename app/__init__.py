@@ -36,8 +36,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from app import routes, models
-
+from app import routes, models, errors
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 Bootstrap5(app)
