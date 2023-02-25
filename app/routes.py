@@ -58,6 +58,14 @@ def before_request():
     db.session.commit()
 
 
+# Create a route to delete all entries in the database
+@app.route("/delete-all")
+def delete_all_entries():
+    db.session.query(User).delete()
+    db.session.commit()
+    return "All entries have been deleted"
+
+
 @app.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
