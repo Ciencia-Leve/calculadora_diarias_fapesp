@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import 'bootstrap/form.html' as wtf %}
 
 {% block title %}
 Calculadora de Diárias para FAPESP
@@ -33,40 +34,15 @@ Calculadora de Diárias para FAPESP
   {% endif %}
   {{download_url|safe}}
   <h2>Formulário</h2>
-  <form method="POST">
-    <div>
-      {{ form.csrf_token }}
-      {{ form.event_start_date.label }} {{ form.event_start_date(size=20) }}
-      {% for error in form.event_start_date.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
+  <form action="" method="post">
+    <div class="row">
+      <div class="col-md-4">
+        {{ wtf.render_form(form) }}
+      </div>
     </div>
-    <div>
-      {{ form.csrf_token }}
-      {{ form.event_end_date.label }} {{ form.event_end_date(size=20) }}
-      {% for error in form.event_end_date.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-    </div>
-    <div>
-      {{ form.csrf_token }}
-      {{ form.plus_day.label }} {{ form.plus_day(size=20) }}
-      {% for error in form.plus_day.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-    </div>
-    <div>
-      {{ form.csrf_token }}
-      {{ form.level.label }} {{ form.level }}
-      {% for error in form.level.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-    </div>
-
-    <input type="submit" value="Calcular">
-    <h4> Site em construção; sistema funcionando somente para capitais de Estado, Angra dos Reis (RJ), Brasília (DF),
-      Búzios (RJ) e Guarujá (SP) </h4>
   </form>
+  <h4> Site em construção; sistema funcionando somente para capitais de Estado, Angra dos Reis (RJ), Brasília (DF),
+    Búzios (RJ) e Guarujá (SP) </h4>
 
 
 </div>

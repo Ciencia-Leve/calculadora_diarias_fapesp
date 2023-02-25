@@ -47,30 +47,39 @@ class EditProfileForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
+    username = StringField("Nome de usuário", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Senha", validators=[DataRequired()])
     password2 = PasswordField(
-        "Repeat Password", validators=[DataRequired(), EqualTo("password")]
+        "Repita a senha", validators=[DataRequired(), EqualTo("password")]
     )
-    submit = SubmitField("Register")
+    full_name = TextAreaField(
+        "Nome completo", validators=[Length(min=0, max=140), DataRequired()]
+    )
+    advisor_full_name = TextAreaField(
+        "Nome do orientador/a", validators=[Length(min=0, max=140), DataRequired()]
+    )
+    fapesp_process_number = TextAreaField(
+        "Número do processo FAPESP", validators=[Length(min=0, max=140), DataRequired()]
+    )
+    submit = SubmitField("Registre-se")
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
-            raise ValidationError("Please use a different username.")
+            raise ValidationError("Por favor escolha um nome de usuário diferente.")
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError("Please use a different email address.")
+            raise ValidationError("Por favor use um endereço de email diferente.")
 
 
 class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    remember_me = BooleanField("Remember Me")
-    submit = SubmitField("Sign In")
+    username = StringField("Nome de usuário:", validators=[DataRequired()])
+    password = PasswordField("Senha", validators=[DataRequired()])
+    remember_me = BooleanField("Se lembre de mim")
+    submit = SubmitField("Entre")
 
 
 class dailyStipendForm(FlaskForm):
@@ -106,6 +115,7 @@ class dailyStipendInternationalForm(dailyStipendForm):
     )
 
     location = SelectField("Location", choices=[], validators=[Optional()])
+    submit = SubmitField("Calcular")
 
 
 class dailyStipendNationalForm(dailyStipendForm):
@@ -116,21 +126,4 @@ class dailyStipendNationalForm(dailyStipendForm):
             ("plus", "Pós-Doc e além"),
         ],
     )
-
-
-class dailyStipendFormWithPersonalInfo(dailyStipendForm):
-    name = StringField(
-        "Nome completo", default="NOME COMPLETO", validators=[Optional()]
-    )
-    n_do_processo = StringField(
-        "Número do Processo", default="NÚMERO DO PROCESSO", validators=[Optional()]
-    )
-    cpf = StringField("CPF", default="CPF", validators=[Optional()])
-    identidade = StringField(
-        "Identidade", default="IDENTIDADE", validators=[Optional()]
-    )
-    endereço = StringField(
-        "Endereço (rua e número)", default="ENDEREÇO", validators=[Optional()]
-    )
-    bairro = StringField("Bairro", default="BAIRRO", validators=[Optional()])
-    cidade = StringField("Cidade", default="CIDADE", validators=[Optional()])
+    submit = SubmitField("Calcular")

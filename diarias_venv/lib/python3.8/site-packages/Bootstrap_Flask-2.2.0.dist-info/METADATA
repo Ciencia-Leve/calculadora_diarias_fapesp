@@ -1,0 +1,43 @@
+Metadata-Version: 2.1
+Name: Bootstrap-Flask
+Version: 2.2.0
+Summary: Bootstrap 4 & 5 helper for your Flask projects.
+Home-page: https://github.com/helloflask/bootstrap-flask
+Author: Grey Li
+Author-email: withlihui@gmail.com
+License: MIT
+Keywords: flask extension development
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Framework :: Flask
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/markdown
+Requires-Dist: Flask
+Requires-Dist: WTForms
+
+
+Bootstrap-Flask
+---------------
+
+Bootstrap-Flask is a collection of Jinja macros for Bootstrap 4 & 5 and Flask.
+It helps you to render Flask-related objects and data to Bootstrap HTML more easily.
+
+If you come from Flask-Bootstrap, check out
+[this tutorial](https://bootstrap-flask.readthedocs.io/en/stable/migrate/)
+on how to migrate to this extension.
+
+Go to [GitHub page](https://github.com/helloflask/bootstrap-flask), which you
+can check for more details.
+
+

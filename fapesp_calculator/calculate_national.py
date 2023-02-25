@@ -50,6 +50,8 @@ def generate_template_for_national_event(
     event_end_date_time,
     event_name_string="NOME DO EVENTO",
     event_place_string="LOCAL DO EVENTO",
+    process_number="N DO PROCESSO",
+    full_name="NOME COMPLETO",
     extra_day=True,
     arrival_before_and_after=True,
     category="Diárias Nacionais em bolsas",
@@ -57,7 +59,6 @@ def generate_template_for_national_event(
     template_path=HERE.joinpath("modelo_6_template.docx"),
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
 ):
-
     national_dict = json.loads(
         RESULTS.joinpath("fapesp_national_values.json").read_text()
     )
@@ -107,6 +108,9 @@ def generate_template_for_national_event(
         my_dict["adendo"] = ""
     my_dict["nome_do_evento"] = event_name_string
     my_dict["local_do_evento"] = event_place_string
+    my_dict["n_do_processo"] = process_number
+    my_dict["nome_completo"] = full_name
+
     my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
 
     docx_replace(doc, **my_dict)

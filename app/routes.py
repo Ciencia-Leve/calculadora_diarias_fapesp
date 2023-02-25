@@ -159,7 +159,6 @@ def location(country):
 def nacional():
     form = dailyStipendNationalForm()
     print("HERE")
-
     if request.method == "POST" and form.validate():
         print("VALIDATED")
         my_dict = {}
@@ -173,6 +172,8 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
+                full_name=current_user.full_name,
+                process_number=current_user.fapesp_process_number,
                 extra_day=extra_day,
                 filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
             )
@@ -181,6 +182,8 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
+                full_name=current_user.full_name,
+                process_number=current_user.fapesp_process_number,
                 category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
                 subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
                 extra_day=extra_day,
@@ -241,7 +244,13 @@ def register():
         return redirect(url_for("index"))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(
+            username=form.username.data,
+            email=form.email.data,
+            full_name=form.full_name.data,
+            advisor_full_name=form.advisor_full_name.data,
+            fapesp_process_number=form.fapesp_process_number.data,
+        )
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
