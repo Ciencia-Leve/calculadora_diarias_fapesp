@@ -56,7 +56,6 @@ def generate_template_for_international_event(
     template_path=HERE.joinpath("modelo_6_template_internacional.docx"),
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
 ):
-    print("HERE")
     international_values_dict = json.loads(
         RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
     )

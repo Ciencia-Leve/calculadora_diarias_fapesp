@@ -58,12 +58,12 @@ def before_request():
     db.session.commit()
 
 
-# Create a route to delete all entries in the database
-@app.route("/delete-all")
-def delete_all_entries():
-    db.session.query(User).delete()
-    db.session.commit()
-    return "All entries have been deleted"
+# # Create a route to delete all entries in the database
+# @app.route("/delete-all")
+# def delete_all_entries():
+#     db.session.query(User).delete()
+#     db.session.commit()
+#     return "All entries have been deleted"
 
 
 @app.route("/edit_profile", methods=["GET", "POST"])
@@ -106,13 +106,14 @@ def pr35():
 
 @app.route("/internacional/", methods=["GET", "POST"])
 @app.route("/internacional", methods=["GET", "POST"])
+@login_required
 def internacional():
     form = dailyStipendInternationalForm()
     form.location.choices = [
         (a, a) for a in list(international_values_dict_computable["Albânia"].keys())
     ]
 
-    if request.method == "POST" and form.validate():
+    if request.method == "POST":
         print("RUNNING CODE")
         my_dict = {}
         if form.plus_day.data == "sim":
