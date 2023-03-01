@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+from por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
 
 # from dados import my_dict
@@ -53,8 +53,12 @@ def generate_template_for_international_event(
     event_name_string="NOME DO EVENTO",
     event_place_string="LOCAL DO EVENTO",
     extra_day=True,
-    template_path=HERE.joinpath("modelo_6_template_internacional.docx"),
+    template_path=HERE.joinpath("modelo_3_novo.docx"),
+    cambio_template_path=HERE.joinpath("modelo_justificativa_cambio.docx"),
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
+    filled_cambio_template_path=HERE.joinpath(
+        "modelo_justificativa_cambio_preenchido.docx"
+    ),
 ):
     international_values_dict = json.loads(
         RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
@@ -123,6 +127,12 @@ def generate_template_for_international_event(
 
     doc.save(filled_template_path)
 
+    cambio_doc = Document(cambio_template_path)
+
+    my_dict["chamada_de_api"] = conversion_url
+    docx_replace(cambio_doc, **my_dict)
+
+    cambio_doc.save(filled_cambio_template_path)
     return message_to_send
 
 

@@ -54,9 +54,9 @@ def generate_template_for_national_event(
     full_name="NOME COMPLETO",
     extra_day=True,
     arrival_before_and_after=True,
-    category="Diárias Nacionais em bolsas",
+    category="Diárias Nacionais em bolsas (exceto pós-doutorado)",
     subcategory="Com pernoite",
-    template_path=HERE.joinpath("modelo_6_template.docx"),
+    template_path=HERE.joinpath("modelo_3_novo.docx"),
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
 ):
     national_dict = json.loads(
