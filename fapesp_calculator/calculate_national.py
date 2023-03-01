@@ -33,7 +33,7 @@ from datetime import datetime
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from por_extenso import dinheiro_por_extenso, data_por_extenso
+from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
 import locale
 
 # from dados import my_dict
