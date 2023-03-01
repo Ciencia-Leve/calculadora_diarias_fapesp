@@ -33,7 +33,7 @@ from datetime import datetime
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+from por_extenso import dinheiro_por_extenso, data_por_extenso
 import locale
 
 # from dados import my_dict
@@ -70,9 +70,12 @@ def generate_template_for_national_event(
 
         for subcategory_in_dict, value in category_data.items():
             value = value.replace("R$ ", "")
-            national_dict_computable[category_in_dict][subcategory_in_dict] = Money(
-                value.replace(",", "."), Currency.BRL
-            )
+            try:
+                national_dict_computable[category_in_dict][subcategory_in_dict] = Money(
+                    value.replace(",", "."), Currency.BRL
+                )
+            except:
+                pass
     event_duration = event_end_date_time - event_start_date_time
 
     value_for_category = national_dict_computable[category][subcategory]
@@ -121,10 +124,11 @@ def generate_template_for_national_event(
 
 
 if __name__ == "__main__":
+    my_dict = {}
     generate_template_for_national_event(
         my_dict=my_dict,
         event_start_date_time=datetime(2023, 3, 29),
         event_end_date_time=datetime(2023, 3, 31),
         category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
-        subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
+        subcategory="Com pernoite em: todas as capitais de estado, Brasília (DF), Araçatuba (SP), Araraquara (SP), Barretos (SP), Bauru (SP), Campinas (SP), Franca (SP), Itapeva (SP), Marília (SP), Presidente Prudente (SP), Registro (SP), Ribeirão Preto (SP), Santos (SP), São José do Rio Preto (SP), São José dos Campos (SP) e Sorocaba (SP)",
     )

@@ -106,7 +106,7 @@ def pr35():
 
 @app.route("/internacional/", methods=["GET", "POST"])
 @app.route("/internacional", methods=["GET", "POST"])
-@login_required
+# @login_required
 def internacional():
     form = dailyStipendInternationalForm()
     form.location.choices = [
@@ -156,7 +156,7 @@ def location(country):
 
 @app.route("/nacional/", methods=["GET", "POST"])
 @app.route("/nacional", methods=["GET", "POST"])
-@login_required
+# @login_required
 def nacional():
     form = dailyStipendNationalForm()
     print("HERE")
@@ -173,8 +173,8 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
-                full_name=current_user.full_name,
-                process_number=current_user.fapesp_process_number,
+                #                full_name=current_user.full_name,
+                #                process_number=current_user.fapesp_process_number,
                 extra_day=extra_day,
                 filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
             )
@@ -183,8 +183,8 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
-                full_name=current_user.full_name,
-                process_number=current_user.fapesp_process_number,
+                #               full_name=current_user.full_name,
+                #               process_number=current_user.fapesp_process_number,
                 category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
                 subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
                 extra_day=extra_day,

@@ -45,7 +45,7 @@
         <li class="nav-item"><a class="nav-link" href="{{ url_for('internacional') }}">Evento Internacional</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('faq') }}">Perguntas Frequentes</a></li>
         {% if current_user.is_anonymous %}
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+        <!--        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li> -->
         {% else %}
         <li class="nav-item"><a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Perfil</a>
         </li>

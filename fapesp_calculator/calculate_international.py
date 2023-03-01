@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+from por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
 
 # from dados import my_dict
@@ -103,7 +103,6 @@ def generate_template_for_international_event(
     doc = Document(template_path)
 
     my_dict["valor_em_dolar"] = str(value_in_usd.amount).replace(".", ",")
-
     my_dict["valor_em_reais"] = str(value_in_brl.amount).replace(".", ",")
     my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
     my_dict["data_inicial"] = data_por_extenso(event_start_date_time)

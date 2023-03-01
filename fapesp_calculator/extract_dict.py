@@ -9,7 +9,7 @@ import json
 HERE = Path(__file__).parent.resolve()
 RESULTS = HERE.joinpath("results").resolve()
 
-url = "https://fapesp.br/12042/tabela-de-diarias-de-viagem"
+url = "https://fapesp.br/15888/tabela-de-diarias-de-viagem"
 html = requests.get(url).text
 soup = BeautifulSoup(html, "lxml")
 
@@ -24,12 +24,13 @@ for entry in entries:
     if entry.text.strip() == "":
         continue
     if len(entry.find_all("strong")) > 0:
-        current_strong = entry.find_all("strong")[0].text.strip()
+        current_strong = entry.select("td")[0].text.strip()
+
         if (
             current_strong
-            == "FAPESP: Tabela de Diárias Internacionais com pernoite - Vigente a partir de 01/10/2018"
+            == "FAPESP: Tabela de Diárias Nacionais - Vigente a partir de 01/03/2023"
         ):
-            national_flag = 0
+            national_flag = 1
 
         if international_flag:
             country_value_dict[current_strong] = {}
@@ -37,17 +38,28 @@ for entry in entries:
         if national_flag:
             national_dict[current_strong] = {}
 
-    if national_flag and len(entry.find_all("strong")) == 0:
+    if national_flag != 0 and international_flag == 0:
         print(entry)
         print(entry.find_all("strong"))
-        current_category = entry.select('td[width="83%"]')[0].text.strip()
-        current_value = entry.select('td[width="14%"]')[0].text.strip()
+        current_category = entry.select("td")[0].text.strip()
+        try:
+            current_value = entry.select("td")[1].text.strip()
+        except IndexError:
+            continue
+
+        if current_strong not in national_dict:
+            national_dict[current_strong] = {}
+
         national_dict[current_strong][current_category] = current_value
 
     if international_flag:
         try:
-            current_subplace = entry.select('td[valign="top"]')[0].text.strip()
-            current_value = entry.select('td[valign="bottom"]')[0].text.strip()
+            current_subplace = entry.select("td")[1].text.strip()
+            current_strong = entry.select("td")[0].text.strip()
+            current_value = entry.select("td")[2].text.strip()
+            if current_strong not in country_value_dict:
+                country_value_dict[current_strong] = {}
+
             country_value_dict[current_strong][current_subplace] = current_value
         except:
             continue

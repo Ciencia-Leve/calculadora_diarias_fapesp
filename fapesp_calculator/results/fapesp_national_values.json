@@ -1,13 +1,22 @@
 {
-    "Diárias Nacionais em bolsas": {
-        "Com pernoite": "R$ 255,00",
-        "Diária para refeições": "R$ 45,00",
-        "Sem pernoite": "R$ 170,00"
+    "Diárias Internacionais com pernoite (Pesquisadores e Bolsistas)": {},
+    "Diárias Nacionais em Auxílios": {},
+    "Diárias Nacionais em bolsas (exceto pós-doutorado)": {
+        "Com pernoite": "R$ 340,00",
+        "Diária para refeições": "R$ 60,00",
+        "Diárias Nacionais em bolsas (exceto pós-doutorado)": "",
+        "Sem pernoite": "R$ 228,00"
+    },
+    "FAPESP: Tabela de Diárias Internacionais com pernoite - Vigente a partir de 01/03/2023": {},
+    "FAPESP: Tabela de Diárias Nacionais - Vigente a partir de 01/03/2023": {},
+    "País": {
+        "País": "Cidade"
     },
     "Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos": {
-        "Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)": "R$ 555,00",
-        "Com pernoite (para as demais localidades)": "R$ 380,00",
-        "Diária para refeições": "R$ 75,00",
-        "Sem pernoite": "R$ 285,00"
-    }
+        "Com pernoite (para as demais localidades)": "R$ 510,00",
+        "Com pernoite em: todas as capitais de estado, Brasília (DF), Araçatuba (SP), Araraquara (SP), Barretos (SP), Bauru (SP), Campinas (SP), Franca (SP), Itapeva (SP), Marília (SP), Presidente Prudente (SP), Registro (SP), Ribeirão Preto (SP), Santos (SP), São José do Rio Preto (SP), São José dos Campos (SP) e Sorocaba (SP)": "R$ 745,00",
+        "Diária para refeições": "R$ 100,00",
+        "Sem pernoite": "R$ 380,00"
+    },
+    "TABELA DA ONU + 25%": {}
 }
