@@ -12,7 +12,6 @@ Calculadora de Diárias para FAPESP
 
 
   {% if submitted %}
-  <h1>Olá, {{ current_user.username }}!</h1>
   <div class="alert alert-danger" role="alert">
     Note: a calculadora não considera o limite que a FAPESP impõe por categoria. As diárias para um evento nacional
     não
@@ -29,8 +28,7 @@ Calculadora de Diárias para FAPESP
 
   <p> Recibo de diárias semi-preenchido:
 
-    <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo preenchido no padrão 2016 (faltando
-      assinatura)</a>
+    <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo no padrão 2020</a>
   </p>
   {% endif %}
   {{download_url|safe}}

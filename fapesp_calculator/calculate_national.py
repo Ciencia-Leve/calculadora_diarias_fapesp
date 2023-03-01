@@ -113,6 +113,10 @@ def generate_template_for_national_event(
     my_dict["local_do_evento"] = event_place_string
     my_dict["n_do_processo"] = process_number
     my_dict["nome_completo"] = full_name
+    my_dict["valor_unitario"] = str(value_for_category)
+    my_dict["n_diarias"] = total_daily_stipends
+
+    my_dict["cambio"] = ""
 
     my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
 

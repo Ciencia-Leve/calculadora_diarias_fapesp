@@ -30,9 +30,14 @@ Calculadora de Diárias para FAPESP
     apesar de o modelo 2020, mais completo, constar nas normas
     atuais.
   </p>
-  <p> Recibo de diárias semi-preenchido :
-    <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Padrão 2016</a> </p>
-  {% endif %}
+  <p> Recibos:
+    <ul>
+      <li> <a href='{{ url_for('download', filename="modelo_preenchido.docx") }}'>Recibo no padrão 2020</a> </li>
+      <li> <a href='{{ url_for('download', filename="modelo_justificativa_cambio_preenchido.docx") }}'>Comprovante para
+          a
+          taxa de câmbio</a> </li>
+    </ul>
+  </p> {% endif %}
 
   {{download_url|safe}}
 

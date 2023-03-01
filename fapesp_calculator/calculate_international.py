@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
-from por_extenso import dinheiro_por_extenso, data_por_extenso
+from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
 
 # from dados import my_dict
@@ -111,7 +111,6 @@ def generate_template_for_international_event(
     my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
     my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
     my_dict["data_final"] = data_por_extenso(event_end_date_time)
-    my_dict["taxa_usd"] = str(usd_to_brl_rate)
 
     if extra_day:
         my_dict[
@@ -122,6 +121,10 @@ def generate_template_for_international_event(
     my_dict["nome_do_evento"] = event_name_string
     my_dict["local_do_evento"] = event_place_string
     my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
+    my_dict["valor_unitario"] = str(value_in_usd)
+    my_dict["cambio"] = str(usd_to_brl_rate)
+
+    my_dict["n_diarias"] = total_daily_stipends
 
     docx_replace(doc, **my_dict)
 
