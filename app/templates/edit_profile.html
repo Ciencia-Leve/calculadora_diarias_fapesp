@@ -1,35 +1,84 @@
 {% extends "layout.html" %}
-{% block main %}
-<h1>Edite o perfil</h1>
-<form action="" method="post">
-  {{ form.hidden_tag() }}
+{% block main %} <h1>Edite o perfil</h1>
+<form method="post" action="{{ url_for('edit_profile') }}">
+  {{ form.csrf_token }}
   <p>
     {{ form.username.label }}<br>
-    {{ form.username(size=32) }}<br>
+    {{ form.username(class='form-control') }}<br>
     {% for error in form.username.errors %}
     <span style="color: red;">[{{ error }}]</span>{% endfor %}
   </p>
   <p>
     {{ form.full_name.label }}<br>
-    {{ form.full_name(cols=50, rows=4) }}<br>
+    {{ form.full_name(class='form-control') }}<br>
     {% for error in form.full_name.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
     {{ form.advisor_full_name.label }}<br>
-    {{ form.advisor_full_name(cols=50, rows=4) }}<br>
+    {{ form.advisor_full_name(class='form-control') }}<br>
     {% for error in form.advisor_full_name.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
     {{ form.fapesp_process_number.label }}<br>
-    {{ form.fapesp_process_number(cols=50, rows=4) }}<br>
+    {{ form.fapesp_process_number(class='form-control') }}<br>
     {% for error in form.fapesp_process_number.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
-  <p>{{ form.submit() }}</p>
+  <p>
+    {{ form.id_number.label }}<br>
+    {{ form.id_number(class='form-control') }}<br>
+    {% for error in form.id_number.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.cpf_number.label }}<br>
+    {{ form.cpf_number(class='form-control') }}<br>
+    {% for error in form.cpf_number.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.address_number.label }}<br>
+    {{ form.address_number(class='form-control') }}<br>
+  </p>
+
+  </p>
+  <p>
+    {{ form.address_complement.label }}<br>
+    {{ form.address_complement(class='form-control') }}<br>
+    {% for error in form.address_complement.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.neighbourhood.label }}<br>
+    {{ form.neighbourhood(class='form-control') }}<br>
+    {% for error in form.neighbourhood.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.city.label }}<br>
+    {{ form.city(class='form-control') }}<br>
+    {% for error in form.city.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.state.label }}<br>
+    {{ form.state(class='form-control') }}<br>
+    {% for error in form.state.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.submit(class='btn btn-primary') }}
+  </p>
 </form>
 {% endblock %}

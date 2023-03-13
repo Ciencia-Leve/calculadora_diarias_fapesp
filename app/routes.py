@@ -71,12 +71,7 @@ def before_request():
 def edit_profile():
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.full_name = form.full_name.data
-
-        current_user.advisor_full_name = form.advisor_full_name.data
-        current_user.fapesp_process_number = form.fapesp_process_number.data
-
+        form.populate_obj(current_user)
         db.session.commit()
         flash("Your changes have been saved.")
         return redirect(url_for("edit_profile"))

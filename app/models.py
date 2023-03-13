@@ -13,6 +13,13 @@ class User(UserMixin, db.Model):
     full_name = db.Column(db.String(140))
     advisor_full_name = db.Column(db.String(140))
     fapesp_process_number = db.Column(db.String(140))
+    id_number = db.Column(db.String(140))
+    cpf_number = db.Column(db.String(140))
+    address_number = db.Column(db.String(140))
+    address_complement = db.Column(db.String(140))
+    neighbourhood = db.Column(db.String(140))
+    city = db.Column(db.String(140))
+    state = db.Column(db.String(140))
 
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 

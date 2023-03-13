@@ -93,6 +93,8 @@ def generate_template_for_national_event(
     message_to_send += f"""
         <p> O valor que você pode solicitar para a localidade escolhida é de {value_for_category*total_daily_stipends},
         correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
+        <p> Solicite o valor no <a href="https://siaf.fapesp.br/sage/" target="_blank">SIAF</a> e justifique com o recibo abaixo.</p>
+
     """
     doc = Document(template_path)
 

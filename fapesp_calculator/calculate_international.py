@@ -103,6 +103,7 @@ def generate_template_for_international_event(
         <p> O valor que você pode solicitar para a localidade escolhida é de {value_in_usd},
         correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
         <p> Considerando uma taxa de conversão de {str(usd_to_brl_rate)} (<a target="_blank" href="{conversion_url}">Plataforma Olinda - Banco Central do Brasil</a>) o valor em reais solicitado será de {value_in_brl}
+        <p> Solicite o valor no <a href="https://siaf.fapesp.br/sage/" target="_blank">SIAF</a> e justifique com os recibos abaixo.</p>
     """
     doc = Document(template_path)
 
