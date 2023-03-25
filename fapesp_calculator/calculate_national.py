@@ -48,10 +48,7 @@ def generate_template_for_national_event(
     my_dict,
     event_start_date_time,
     event_end_date_time,
-    event_name_string="NOME DO EVENTO",
-    event_place_string="LOCAL DO EVENTO",
-    process_number="N DO PROCESSO",
-    full_name="NOME COMPLETO",
+    current_user=None,
     extra_day=True,
     arrival_before_and_after=True,
     category="Diárias Nacionais em bolsas (exceto pós-doutorado)",
@@ -111,10 +108,18 @@ def generate_template_for_national_event(
         ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
     else:
         my_dict["adendo"] = ""
-    my_dict["nome_do_evento"] = event_name_string
-    my_dict["local_do_evento"] = event_place_string
-    my_dict["n_do_processo"] = process_number
-    my_dict["nome_completo"] = full_name
+
+    if current_user is not None:
+        my_dict["n_do_processo"] = current_user.fapesp_process_number
+        my_dict["nome_completo"] = current_user.full_name
+        my_dict["numero_de_identidade"] = current_user.id_number
+        my_dict["numero_de_CPF"] = current_user.cpf_number
+        my_dict["logradouro_e_numero"] = current_user.address_number
+        my_dict["complemento_de_endereco"] = current_user.address_complement
+        my_dict["bairro"] = current_user.neighbourhood
+        my_dict["cidade"] = current_user.city
+        my_dict["estado"] = current_user.state
+
     my_dict["valor_unitario"] = str(value_for_category)
     my_dict["n_diarias"] = total_daily_stipends
 

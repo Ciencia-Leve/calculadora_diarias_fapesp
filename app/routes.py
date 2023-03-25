@@ -69,7 +69,7 @@ def before_request():
 @app.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    form = EditProfileForm(current_user.username)
+    form = EditProfileForm(current_user.username, obj=current_user)
     if form.validate_on_submit():
         form.populate_obj(current_user)
         db.session.commit()
@@ -77,9 +77,17 @@ def edit_profile():
         return redirect(url_for("edit_profile"))
     elif request.method == "GET":
         form.username.data = current_user.username
-        form.fapesp_process_number.data = current_user.fapesp_process_number
+        form.email.data = current_user.email
         form.full_name.data = current_user.full_name
         form.advisor_full_name.data = current_user.advisor_full_name
+        form.fapesp_process_number.data = current_user.fapesp_process_number
+        form.id_number.data = current_user.id_number
+        form.cpf_number.data = current_user.cpf_number
+        form.address_number.data = current_user.address_number
+        form.address_complement.data = current_user.address_complement
+        form.neighbourhood.data = current_user.neighbourhood
+        form.city.data = current_user.city
+        form.state.data = current_user.state
 
     return render_template("edit_profile.html", title="Edit Profile", form=form)
 
@@ -168,8 +176,7 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
-                #                full_name=current_user.full_name,
-                #                process_number=current_user.fapesp_process_number,
+                current_user=current_user,
                 extra_day=extra_day,
                 filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
             )
@@ -178,8 +185,7 @@ def nacional():
                 my_dict=my_dict,
                 event_start_date_time=form.event_start_date.data,
                 event_end_date_time=form.event_end_date.data,
-                #               full_name=current_user.full_name,
-                #               process_number=current_user.fapesp_process_number,
+                current_user_data=current_user,
                 category="Pesquisadores, dirigentes, coordenadores, assessores, conselheiros e pós-doutorandos",
                 subcategory="Com pernoite (em capitais de Estado, Angra dos Reis (RJ), Brasília (DF), Búzios (RJ) e Guarujá (SP)",
                 extra_day=extra_day,
