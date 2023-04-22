@@ -19,7 +19,8 @@ from wtforms.validators import (
     EqualTo,
     Length,
 )
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+
 from app.values_dict import international_values_dict_computable
 from app.models import User
 
@@ -114,13 +115,13 @@ class dailyStipendForm(FlaskForm):
     event_start_date = DateField(
         "Data de Início do Evento",
         format="%Y-%m-%d",
-        default=date(2023, 3, 29),
+        default=date.today(),
         validators=[InputRequired()],
     )
     event_end_date = DateField(
         "Data de Término do Evento",
         format="%Y-%m-%d",
-        default=date(2023, 3, 31),
+        default=date.today() + timedelta(days=3),
         validators=[InputRequired()],
     )
 
