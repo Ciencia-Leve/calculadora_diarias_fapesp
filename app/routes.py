@@ -132,6 +132,9 @@ def internacional():
             country=form.country.data,
             subnational_location=form.location.data,
             filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
+            filled_cambio_template_path=HERE.joinpath(
+                "uploads/modelo_justificativa_cambio_preenchido.docx"
+            ),
         )
 
         return render_template(
