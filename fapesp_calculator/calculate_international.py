@@ -88,26 +88,26 @@ def generate_template_for_international_event(
         message_to_send += f"e mais uma diária por chegar antes do dia que começa e sair depois do dia que termina."
         total_daily_stipends += 1
 
-    value_in_usd = value_for_category * total_daily_stipends
+    total_value_in_usd = value_for_category * total_daily_stipends
 
     today = datetime.now()
 
     conversion_url, usd_to_brl_rate = get_conversion_for_date(today)
 
-    brl_calculation = float(value_in_usd.amount) * usd_to_brl_rate
+    brl_calculation = float(total_value_in_usd.amount) * usd_to_brl_rate
 
     print(brl_calculation)
     value_in_brl = Money("{:.2f}".format(round(brl_calculation, 2)), Currency.BRL)
 
     message_to_send += f"""
-        <p> O valor que você pode solicitar para a localidade escolhida é de {value_in_usd},
+        <p> O valor que você pode solicitar para a localidade escolhida é de {total_value_in_usd},
         correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
         <p> Considerando uma taxa de conversão de {str(usd_to_brl_rate)} (<a target="_blank" href="{conversion_url}">Plataforma Olinda - Banco Central do Brasil</a>) o valor em reais solicitado será de {value_in_brl}
         <p> Solicite o valor no <a href="https://siaf.fapesp.br/sage/" target="_blank">SIAF</a> e justifique com os recibos abaixo.</p>
     """
     doc = Document(template_path)
 
-    my_dict["valor_em_dolar"] = str(value_in_usd.amount).replace(".", ",")
+    my_dict["valor_em_dolar"] = str(total_value_in_usd.amount).replace(".", ",")
     my_dict["valor_em_reais"] = str(value_in_brl.amount).replace(".", ",")
     my_dict["valor_por_extenso"] = dinheiro_por_extenso(value_in_brl)
     my_dict["data_inicial"] = data_por_extenso(event_start_date_time)
@@ -122,8 +122,8 @@ def generate_template_for_international_event(
     my_dict["nome_do_evento"] = event_name_string
     my_dict["local_do_evento"] = event_place_string
     my_dict["data_de_hoje"] = data_por_extenso(datetime.now())
-    my_dict["valor_unitario"] = str(value_in_usd)
-    my_dict["cambio"] = str(usd_to_brl_rate)
+    my_dict["valor_unitario"] = str(value_for_category)
+    my_dict["taxa_usd"] = str(usd_to_brl_rate)
 
     my_dict["n_diarias"] = total_daily_stipends
 

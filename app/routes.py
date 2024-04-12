@@ -119,6 +119,27 @@ def internacional():
     if request.method == "POST":
         print("RUNNING CODE")
         my_dict = {}
+        if current_user.is_authenticated:
+            my_dict["nome_completo"] = current_user.full_name
+            my_dict["n_do_processo"] = current_user.fapesp_process_number
+            my_dict["numero_de_identidade"] = current_user.fapesp_process_number
+            my_dict["numero_de_CPF"] = current_user.cpf_number
+            my_dict["logradouro_e_numero"] = current_user.address_number
+            my_dict["complemento_de_endereco"] = current_user.address_complement
+            my_dict["bairro"] = current_user.neighbourhood
+            my_dict["cidade"] = current_user.city
+            my_dict["estado"] = current_user.state
+        else:
+            my_dict["nome_completo"] = ""
+            my_dict["n_do_processo"] = ""
+            my_dict["numero_de_identidade"] = ""
+            my_dict["numero_de_CPF"] = ""
+            my_dict["logradouro_e_numero"] = ""
+            my_dict["complemento_de_endereco"] = ""
+            my_dict["bairro"] = ""
+            my_dict["cidade"] = ""
+            my_dict["estado"] = ""
+
         if form.plus_day.data == "sim":
             extra_day = True
         else:
@@ -207,7 +228,7 @@ def nacional():
 
 @app.route("/about")
 def about():
-    return flask.render_template("about.html")
+    return render_template("about.html")
 
 
 @app.route("/uploads/<path:filename>", methods=["GET", "POST"])
@@ -268,8 +289,4 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {"author": user, "body": "Test post #1"},
-        {"author": user, "body": "Test post #2"},
-    ]
-    return render_template("user.html", user=user, posts=posts)
+    return render_template("user.html", user=user)
