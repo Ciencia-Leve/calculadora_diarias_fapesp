@@ -9,7 +9,7 @@ import json
 HERE = Path(__file__).parent.resolve()
 RESULTS = HERE.joinpath("results").resolve()
 
-url = "https://fapesp.br/15888/tabela-de-diarias-de-viagem"
+url = "https://fapesp.br/16590/tabela-de-diarias-de-viagem"
 html = requests.get(url).text
 soup = BeautifulSoup(html, "lxml")
 
@@ -28,7 +28,7 @@ for entry in entries:
 
         if (
             current_strong
-            == "FAPESP: Tabela de Diárias Nacionais - Vigente a partir de 01/03/2023"
+            == "FAPESP: Tabela de Diárias Nacionais - Vigente a partir de 01/03/2024"
         ):
             national_flag = 1
 

@@ -33,7 +33,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from docx import Document
 from python_docx_replace import docx_replace
+from flask import flash
 from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
+
+# from por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
 
 # from dados import my_dict
@@ -92,7 +95,17 @@ def generate_template_for_international_event(
 
     today = datetime.now()
 
-    conversion_url, usd_to_brl_rate = get_conversion_for_date(today)
+    try:
+        conversion_url, usd_to_brl_rate = get_conversion_for_date(today)
+    except requests.exceptions.JSONDecodeError:
+        flash(
+            """ O cálculo dos valores em BRL não foi possível devido a um problema com a API de taxas de câmbio do Banco Central."""
+        )
+        message_to_send += f"""
+          <p> O valor que você pode solicitar para a localidade escolhida é de {total_value_in_usd},
+          correspondendo a {total_daily_stipends} x {str(value_for_category)}. </p>
+      """
+        return message_to_send
 
     brl_calculation = float(total_value_in_usd.amount) * usd_to_brl_rate
 
@@ -114,9 +127,9 @@ def generate_template_for_international_event(
     my_dict["data_final"] = data_por_extenso(event_end_date_time)
 
     if extra_day:
-        my_dict[
-            "adendo"
-        ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
+        my_dict["adendo"] = (
+            " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
+        )
     else:
         my_dict["adendo"] = ""
     my_dict["nome_do_evento"] = event_name_string
@@ -144,7 +157,7 @@ def get_conversion_for_date(today):
     day_for_url = today.strftime("%m-%d-%Y")
 
     conversion_url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{day_for_url}'&$top=100&$format=json&$select=cotacaoCompra,dataHoraCotacao"
-
+    print(conversion_url)
     r = requests.get(conversion_url)
     data = r.json()
     if len(data["value"]) == 0:

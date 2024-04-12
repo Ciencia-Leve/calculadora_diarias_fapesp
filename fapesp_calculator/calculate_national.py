@@ -103,13 +103,15 @@ def generate_template_for_national_event(
     my_dict["data_final"] = data_por_extenso(event_end_date_time)
 
     if extra_day:
-        my_dict[
-            "adendo"
-        ] = " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
+        my_dict["adendo"] = (
+            " e mais 1 diária devido à chegada em dia anterior e saída em dia posterior ao evento, conforme rege o §3º da Portaria 35 da FAPESP, "
+        )
     else:
         my_dict["adendo"] = ""
 
-    if current_user is not None:
+    if current_user.is_authenticated:
+        print(current_user)
+        print
         my_dict["n_do_processo"] = current_user.fapesp_process_number
         my_dict["nome_completo"] = current_user.full_name
         my_dict["numero_de_identidade"] = current_user.id_number
