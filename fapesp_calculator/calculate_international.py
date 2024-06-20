@@ -1,32 +1,3 @@
-# https://fapesp.br/12042/tabela-de-diarias-de-viagem
-
-# Portaria 35:
-# IV - Diária com pernoite: valor concedido por dia, destinado a custear as despesas com alimentação,
-# hospedagem e locomoção urbana, quando há deslocamento do município sede com a realização de pousada;
-# V - Diária sem pernoite: valor concedido por dia, destinado a custear as despesas com alimentação e
-# locomoção urbana, quando há deslocamento do município sede sem a realização de pousada;
-# VI - Diária para refeições: valor concedido por dia, destinado a custear as despesas com alimentação,
-# para participação em evento no mesmo município sede, mas fora da Instituição Sede;
-
-# X - Município sede:
-# a) para os outorgados: município em que se localiza a Instituição Sede do projeto, indicada no processo; e
-# b) para membros de equipe não vinculados à Instituição que sedia o projeto: município em que se localiza a Instituição de vínculo do respectivo membro de equipe;
-
-
-# § 3º Nos casos em que, devido aos horários da programação oficial de um ou mais eventos,
-# for necessário chegar no dia anterior ao seu início e retornar no dia seguinte ao seu término,
-#  poderá ser considerada uma diária adicional aos dias dos eventos, respeitados os limites definidos nos Arts. 5º e 6º.
-
-# § 4º Para fins de manutenção mensal, na contagem da fração de mês, será sempre considerado mês comercial de trinta dias.
-
-# § 5º A adequação dos gastos com diárias e manutenção mensal será analisada pela FAPESP com base nas justificativas
-# e documentos comprobatórios enviados nos Relatórios Científicos e Prestações de Contas,
-# a serem apresentados conforme normas específicas,
-#  nas datas estabelecidas no Termo de Outorga e Aceitação de Auxílios e Bolsas.
-
-# § 6º O pagamento de diárias e manutenção mensal no país para pesquisadores que não sejam
-# membros de equipe aprovados pela FAPESP poderá ser realizado nas seguintes hipóteses:
-
 from money.money import Money
 from money.currency import Currency
 from datetime import datetime, timedelta
@@ -36,15 +7,12 @@ from python_docx_replace import docx_replace
 from flask import flash
 from fapesp_calculator.por_extenso import dinheiro_por_extenso, data_por_extenso
 
-# from por_extenso import dinheiro_por_extenso, data_por_extenso
 import requests
-
-# from dados import my_dict
+import json
 
 HERE = Path(__file__).parent.resolve()
 DATA = HERE.parent.joinpath("data").resolve()
 RESULTS = HERE.joinpath("results").resolve()
-import json
 
 
 def generate_template_for_international_event(
@@ -56,13 +24,16 @@ def generate_template_for_international_event(
     event_name_string="NOME DO EVENTO",
     event_place_string="LOCAL DO EVENTO",
     extra_day=True,
-    template_path=HERE.joinpath("modelo_3_novo.docx"),
-    cambio_template_path=HERE.joinpath("modelo_justificativa_cambio.docx"),
+    siaf_value_brl=None,
     filled_template_path=HERE.joinpath("modelo_preenchido.docx"),
     filled_cambio_template_path=HERE.joinpath(
         "modelo_justificativa_cambio_preenchido.docx"
     ),
 ):
+
+    template_path = HERE.joinpath("modelo_3_novo.docx")
+    cambio_template_path = HERE.joinpath("modelo_justificativa_cambio.docx")
+
     international_values_dict = json.loads(
         RESULTS.joinpath("fapesp_international_values.json").read_text(encoding="UTF-8")
     )
@@ -118,6 +89,30 @@ def generate_template_for_international_event(
         <p> Considerando uma taxa de conversão de {str(usd_to_brl_rate)} (<a target="_blank" href="{conversion_url}">Plataforma Olinda - Banco Central do Brasil</a>) o valor em reais solicitado será de {value_in_brl}
         <p> Solicite o valor no <a href="https://siaf.fapesp.br/sage/" target="_blank">SIAF</a> e justifique com os recibos abaixo.</p>
     """
+
+    if siaf_value_brl:
+        siaf_value_brl = Money(siaf_value_brl.replace(",", "."), Currency.BRL)
+        if siaf_value_brl < value_in_brl:
+            template_path = HERE.joinpath("modelo_3_reduzido.docx")
+            cambio_template_path = HERE.joinpath(
+                "modelo_justificativa_cambio_reduzido.docx"
+            )
+            my_dict["valor_reduzido_em_reais"] = str(siaf_value_brl.amount).replace(
+                ".", ","
+            )
+            my_dict["valor_reduzido_por_extenso"] = dinheiro_por_extenso(siaf_value_brl)
+            message_to_send += f"""
+                <p> Nota: O valor disponível no SIAF ({siaf_value_brl}) é menor que o valor calculado ({value_in_brl}). Usando o valor reduzido no SIAF e justificando a diferença.</p>
+            """
+        else:
+            my_dict["valor_reduzido_em_reais"] = str(value_in_brl.amount).replace(
+                ".", ","
+            )
+            my_dict["valor_reduzido_por_extenso"] = dinheiro_por_extenso(value_in_brl)
+    else:
+        my_dict["valor_reduzido_em_reais"] = str(value_in_brl.amount).replace(".", ",")
+        my_dict["valor_reduzido_por_extenso"] = dinheiro_por_extenso(value_in_brl)
+
     doc = Document(template_path)
 
     my_dict["valor_em_dolar"] = str(total_value_in_usd.amount).replace(".", ",")
@@ -163,7 +158,6 @@ def get_conversion_for_date(today):
     if len(data["value"]) == 0:
         day = today - timedelta(1)
         conversion_url, usd_to_brl_rate = get_conversion_for_date(day)
-
     else:
         usd_to_brl_rate = float(data["value"][0]["cotacaoCompra"])
     return conversion_url, usd_to_brl_rate
@@ -176,4 +170,5 @@ if __name__ == "__main__":
         subnational_location="Hamburgo",
         event_start_date_time=datetime(2023, 3, 29),
         event_end_date_time=datetime(2023, 3, 31),
+        siaf_value_brl="2000,00",
     )

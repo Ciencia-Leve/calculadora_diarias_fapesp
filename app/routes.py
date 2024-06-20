@@ -122,7 +122,7 @@ def internacional():
         if current_user.is_authenticated:
             my_dict["nome_completo"] = current_user.full_name
             my_dict["n_do_processo"] = current_user.fapesp_process_number
-            my_dict["numero_de_identidade"] = current_user.fapesp_process_number
+            my_dict["numero_de_identidade"] = current_user.id_number
             my_dict["numero_de_CPF"] = current_user.cpf_number
             my_dict["logradouro_e_numero"] = current_user.address_number
             my_dict["complemento_de_endereco"] = current_user.address_complement
@@ -145,6 +145,8 @@ def internacional():
         else:
             extra_day = False
 
+        siaf_value_brl = form.siaf_value.data
+
         message_to_send = generate_template_for_international_event(
             my_dict=my_dict,
             event_start_date_time=form.event_start_date.data,
@@ -152,6 +154,7 @@ def internacional():
             extra_day=extra_day,
             country=form.country.data,
             subnational_location=form.location.data,
+            siaf_value_brl=siaf_value_brl,
             filled_template_path=HERE.joinpath("uploads/modelo_preenchido.docx"),
             filled_cambio_template_path=HERE.joinpath(
                 "uploads/modelo_justificativa_cambio_preenchido.docx"

@@ -6,7 +6,6 @@ Calculadora de Diárias para FAPESP
 
 {% block main %}
 
-
 <div class="container">
 
   {% if submitted %}
@@ -45,15 +44,15 @@ Calculadora de Diárias para FAPESP
   <h2>Formulário</h2>
   <form method="POST">
 
+    {{ form.csrf_token }}
+
     <div>
-      {{ form.csrf_token }}
       {{ form.event_start_date.label }} {{ form.event_start_date(size=20) }}
       {% for error in form.event_start_date.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
     </div>
     <div>
-      {{ form.csrf_token }}
       {{ form.event_end_date.label }} {{ form.event_end_date(size=20) }}
       {% for error in form.event_end_date.errors %}
       <span style="color: red;">[{{ error }}]</span>
@@ -61,23 +60,27 @@ Calculadora de Diárias para FAPESP
     </div>
 
     <div>
-      {{ form.csrf_token }}
       {{ form.plus_day.label }} {{ form.plus_day(size=20) }}
-      {% for error in form.event_end_date.errors %}
+      {% for error in form.plus_day.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
     </div>
     <div>
-      {{ form.csrf_token }}
       {{ form.country.label }} {{ form.country }}
-      {% for error in form.event_end_date.errors %}
+      {% for error in form.country.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
     </div>
     <div>
-      {{ form.csrf_token }}
       {{ form.location.label }} {{ form.location}}
-      {% for error in form.event_end_date.errors %}
+      {% for error in form.location.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.siaf_value.label }} {{ form.siaf_value(size=20) }} <small>opcional, com dois dígitos após a vírgula (ex:
+        2105,55)</small>
+      {% for error in form.siaf_value.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
     </div>

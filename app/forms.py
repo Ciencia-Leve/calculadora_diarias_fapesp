@@ -14,15 +14,23 @@ from wtforms.validators import (
     Optional,
     DataRequired,
     ValidationError,
-    DataRequired,
     Email,
     EqualTo,
     Length,
 )
-from datetime import datetime, date, timedelta
+import re
+from datetime import date, timedelta
 
 from app.values_dict import international_values_dict_computable
 from app.models import User
+
+
+def validate_currency(form, field):
+    # Validate the field to be in the format of BRL currency (e.g., 2324,23)
+    if field.data:
+        pattern = r"^\d+,\d{2}$"
+        if not re.match(pattern, field.data):
+            raise ValidationError("O valor deve estar no formato BRL (e.g., 2324,23).")
 
 
 class EditProfileForm(FlaskForm):
@@ -144,6 +152,9 @@ class dailyStipendInternationalForm(dailyStipendForm):
     )
 
     location = SelectField("Location", choices=[], validators=[Optional()])
+    siaf_value = StringField(
+        "Valor disponível no SIAF (BRL)", validators=[Optional(), validate_currency]
+    )
     submit = SubmitField("Calcular")
 
 
